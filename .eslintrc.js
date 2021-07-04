@@ -40,5 +40,7 @@ module.exports = {
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": ["error"],
     "react/no-unescaped-entities": 0,
+    "react-native/no-raw-text": 0,
+    "jsx-a11y/anchor-is-valid": 0,
   },
 };
