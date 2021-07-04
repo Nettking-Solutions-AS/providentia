@@ -25,7 +25,12 @@ module.exports = {
   },
   plugins: ["react", "react-native", "@typescript-eslint", "jest", "prettier"],
   rules: {
-    "prettier/prettier": "error",
+    "prettier/prettier": [
+      "error",
+      {
+        endOfLine: "auto",
+      },
+    ],
     "import/extensions": 0,
     "import/no-unresolved": 0,
     "react/jsx-filename-extension": [
