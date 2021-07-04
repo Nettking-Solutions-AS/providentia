@@ -1,7 +1,11 @@
-import * as React from 'react';
+import * as React from "react";
 
-import { Text, TextProps } from './Themed';
+import { Text, TextProps } from "./Themed";
 
+// eslint-disable-next-line import/prefer-default-export
 export function MonoText(props: TextProps) {
-  return <Text {...props} style={[props.style, { fontFamily: 'space-mono' }]} />;
+  return (
+    // eslint-disable-next-line react/destructuring-assignment,react-native/no-inline-styles,react/jsx-props-no-spreading
+    <Text {...props} style={[props.style, { fontFamily: "space-mono" }]} />
+  );
 }
