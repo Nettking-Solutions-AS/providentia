@@ -1,12 +1,15 @@
 import "react-native-gesture-handler";
 import React from "react";
 import { NativeBaseProvider } from "native-base";
-import Login from "./components/Login";
+import GlobalStateProvider from "./components/StateManagement/GlobalState";
+import ScreenManager from "./components/ScreenManager";
 
 export default function App() {
   return (
-    <NativeBaseProvider>
-      <Login />
-    </NativeBaseProvider>
+    <GlobalStateProvider>
+      <NativeBaseProvider>
+        <ScreenManager />
+      </NativeBaseProvider>
+    </GlobalStateProvider>
   );
 }

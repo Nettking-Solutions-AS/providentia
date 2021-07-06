@@ -10,8 +10,22 @@ import {
   Button,
   HStack,
 } from "native-base";
+import { useGlobalState } from "./StateManagement/GlobalState";
 
 export default function Login() {
+  const { dispatch } = useGlobalState();
+
+  const onLogin = () =>
+    dispatch({
+      type: "SET_CURRENT_USER",
+      payload: {
+        name: "Willy",
+        id: 1,
+        email: "willy@billy.com",
+        role: "customer",
+      },
+    });
+
   return (
     <Box flex={1} p={2} w="90%" mx="auto">
       <Heading size="lg" textAlign="center" color="primary.500">
@@ -36,7 +50,11 @@ export default function Login() {
           <Input type="password" />
         </FormControl>
         <VStack space={2}>
-          <Button colorScheme="cyan" _text={{ color: "white" }}>
+          <Button
+            colorScheme="cyan"
+            _text={{ color: "white" }}
+            onPress={() => onLogin()}
+          >
             Login
           </Button>
         </VStack>
@@ -46,7 +64,7 @@ export default function Login() {
           </Text>
           <Link
             _text={{ color: "cyan.500", bold: true, fontSize: "sm" }}
-            href="#"
+            onPress={() => onLogin()}
           >
             Registrer deg
           </Link>
