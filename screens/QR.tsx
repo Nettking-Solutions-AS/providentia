@@ -1,19 +1,21 @@
 import * as React from "react";
-
-import { Text, View } from "native-base";
+import { Heading, View } from "native-base";
+import { useState } from "react";
+import QRGenerator from "../components/QR/QRGenerator";
+import QROverview from "../components/QR/QROverview";
 
 export default function QR() {
+  const [generateQR, setGenerateQR] = useState(false);
+  const displayQRGenerator = () => setGenerateQR(true);
+  const hideQRGenerator = () => setGenerateQR(false);
   return (
-    <View
-      // Use a separate css file when implementing
-      /* eslint-disable-next-line react-native/no-inline-styles */
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text>QR</Text>
+    <View flex={1} alignItems="center">
+      <Heading>QR</Heading>
+      {generateQR ? (
+        <QRGenerator hideQRGenerator={hideQRGenerator} />
+      ) : (
+        <QROverview displayQRGenerator={displayQRGenerator} />
+      )}
     </View>
   );
 }
