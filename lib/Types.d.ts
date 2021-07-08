@@ -29,7 +29,11 @@ export type GlobalState = {
   items?: Item[];
 };
 
-export type DispatchAction = "SET_STATE" | "SET_CURRENT_USER";
+export type DispatchAction =
+  | "SET_STATE"
+  | "SET_CURRENT_USER"
+  | "SET_ITEMS"
+  | "TOGGLE_MISSING";
 
 export type DispatchObject = {
   type: DispatchAction;
