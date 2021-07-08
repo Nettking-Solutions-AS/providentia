@@ -8,6 +8,20 @@ const Reducer = (state: GlobalState, action: DispatchObject) => {
       return { ...action.payload };
     case "SET_CURRENT_USER":
       return { ...state, currentUser: action.payload };
+    case "SET_ITEMS":
+      return { ...state, items: action.payload };
+    case "TOGGLE_MISSING":
+      return {
+        ...state,
+        items: state.items?.map((item) =>
+          item.id === action.payload.id
+            ? {
+                ...item,
+                status: item.status === "missing" ? "found" : "missing",
+              }
+            : item
+        ),
+      };
     default:
       return state;
   }
