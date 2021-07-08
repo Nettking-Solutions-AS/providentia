@@ -16,7 +16,14 @@ import { useGlobalState } from "../StateManagement/GlobalState";
 import firebase from "../../firebase/config";
 import { isAdmin } from "../../lib/helpers";
 
-export default function ItemCard({ item }: { item: Item }) {
+export default function ItemCard({
+  item,
+  editItem,
+}: {
+  item: Item;
+  // eslint-disable-next-line no-unused-vars
+  editItem: (initialItem: Item) => void;
+}) {
   const { state, dispatch } = useGlobalState();
   const [owners, setOwners] = useState<string[]>();
   const [imageURL, setImageURL] = useState<string>();
@@ -74,7 +81,10 @@ export default function ItemCard({ item }: { item: Item }) {
         <Heading size="md">
           {item.name} ({owners})
         </Heading>
-        <IconButton icon={<Icon size="sm" as={<AntDesign name="edit" />} />} />
+        <IconButton
+          icon={<Icon size="sm" as={<AntDesign name="edit" />} />}
+          onPress={() => editItem(item)}
+        />
       </HStack>
       <Image
         source={{

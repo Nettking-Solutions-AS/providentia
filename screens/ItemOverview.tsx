@@ -29,7 +29,13 @@ export default function ItemOverview({
 
   const getItemList = () => {
     const itemList = scannedItem ? [scannedItem] : state.items;
-    return itemList?.map((i) => <ItemCard key={i.id} item={i} />);
+    return itemList?.map((i) => (
+      <ItemCard
+        key={i.id}
+        item={i}
+        editItem={(item: Item) => navigation.navigate("Ny gjenstand", item)}
+      />
+    ));
   };
 
   const styles = StyleSheet.create({

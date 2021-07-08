@@ -1,6 +1,13 @@
 // A common storage for the types used in the app
 
 export type UserRole = "customer" | "insurer" | "police" | "transportCompany";
+export type Status =
+  | "registered"
+  | "missing"
+  | "found"
+  | "bountyPaid"
+  | "readyForShipment"
+  | "inTransit";
 
 export type ID = string;
 
@@ -17,7 +24,7 @@ export type Item = {
   description: string;
   imageIDs: string[];
   bounty: number;
-  status: string;
+  status: Status;
   lostAt?: string;
   lostDate?: string;
   expirationDate: string;
@@ -33,6 +40,7 @@ export type DispatchAction =
   | "SET_STATE"
   | "SET_CURRENT_USER"
   | "SET_ITEMS"
+  | "ADD_ITEM"
   | "TOGGLE_MISSING";
 
 export type DispatchObject = {
