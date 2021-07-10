@@ -39,3 +39,8 @@ export type DispatchObject = {
   type: DispatchAction;
   payload: any;
 };
+
+export type Error = {
+  type: string;
+  message: string;
+};

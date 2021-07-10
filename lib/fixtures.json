@@ -2,8 +2,14 @@
   "users": [
     {
       "id": 0,
-      "name": "Adrian",
-      "email": "adrian@skineser.no",
+      "name": "Ola",
+      "email": "ola@nordmann.no",
+      "role": "customer"
+    },
+    {
+      "id": 1,
+      "name": "Admin",
+      "email": "admin@adminsen.no",
       "role": "police"
     }
   ],
@@ -16,7 +22,7 @@
       "bounty": 200,
       "status": "ok",
       "expirationDate": "2021-01-01",
-      "owners": 0
+      "owners": [0]
     },
     {
       "id": 1,
@@ -28,7 +34,7 @@
       "lostDate": "2021-07-07",
       "lostAt": "Treningssenteret",
       "expirationDate": "2022-01-01",
-      "owners": 0
+      "owners": [0]
     }
   ]
 }
