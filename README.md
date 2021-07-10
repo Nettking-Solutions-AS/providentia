@@ -17,5 +17,5 @@ yarn start
 
 ### ER-diagram
 
-![image](https://user-images.githubusercontent.com/26925695/124613610-b2f5f180-de73-11eb-93a8-b1b1d8b7fe62.png)  
+![image](https://user-images.githubusercontent.com/26925695/125158338-c1dcec80-e170-11eb-9b41-60bf41a212c5.png)  
 [Draw.io](https://drive.google.com/file/d/1uO78RjRZxjLqsNKLJrD51yemvB_zwbGh/view?usp=sharing)
