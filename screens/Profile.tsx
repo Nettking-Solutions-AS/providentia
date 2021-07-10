@@ -1,19 +1,18 @@
 import * as React from "react";
 
-import { Text, View } from "native-base";
+import { Button, Heading, View } from "native-base";
+import { useGlobalState } from "../components/StateManagement/GlobalState";
 
 export default function Profile() {
+  const { state, dispatch } = useGlobalState();
+  const logout = () => dispatch({ type: "SET_CURRENT_USER", payload: null });
   return (
-    <View
-      // Use a separate css file when implementing
-      /* eslint-disable-next-line react-native/no-inline-styles */
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Text>Profile</Text>
+    <View flex={1} alignItems="center">
+      <Heading>{state.currentUser?.name}</Heading>
+      <Heading size="md" mt={2} mb={5}>
+        {state.currentUser?.email}
+      </Heading>
+      <Button onPress={logout}>Logg ut</Button>
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -8,7 +8,6 @@ import ItemOverview from "../screens/ItemOverview";
 import Profile from "../screens/Profile";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import UserRegistration from "../screens/UserRegistration";
-import * as fixtures from "../lib/fixtures.json";
 
 export default function ScreenManager() {
   const screenOptions = (route: { name: string }) => ({
@@ -39,21 +38,7 @@ export default function ScreenManager() {
   });
   const Tab = createBottomTabNavigator();
 
-  const { state, dispatch } = useGlobalState();
-  const fetchData = () => {
-    try {
-      const { users, items } = fixtures;
-      dispatch({ type: "SET_CURRENT_USER", payload: users[0] });
-      dispatch({ type: "SET_ITEMS", payload: items });
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { state } = useGlobalState();
 
   return state.currentUser ? (
     <NavigationContainer>
