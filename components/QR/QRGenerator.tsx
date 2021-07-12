@@ -1,37 +1,35 @@
 import { Button, Image, Text, useTheme } from "native-base";
-import { svgAsDataUri } from "save-svg-as-png";
+import { Share } from "react-native";
 import * as React from "react";
-import * as Sharing from "expo-sharing";
-import { useRef } from "react";
-import QRCode from "react-native-qrcode-svg";
 
 export default function QRGenerator({
   hideQRGenerator,
 }: {
   hideQRGenerator: () => void;
 }) {
-  let svg: any;
+  const baseUrl =
+    "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=www.nettking.no/";
 
-  let myRef = useRef<HTMLElement>();
+  const randomID = Math.random().toString(36).substring(7);
+
+  const randomURL = baseUrl + randomID;
+
   const openShareDialogAsync = async () => {
-    const uri = svgAsDataUri(myRef);
-    if (!(await Sharing.isAvailableAsync())) {
-      // eslint-disable-next-line no-alert
-      alert(`Fildeling er ikke aktivert på din platform!`);
-      return;
-    }
-
-    await Sharing.shareAsync(uri);
+    await Share.share({
+      message: randomURL,
+    });
   };
+
   return (
     <>
-      <QRCode
-        value="www.nettking.no/1"
-        getRef={(c) => {
-          myRef = c;
+      <Image
+        size={150}
+        resizeMode="contain"
+        source={{
+          uri: randomURL,
         }}
+        alt="Ny QR-kode"
       />
-      <Image alt="test" source={svg} />
       <Text textAlign="center" mb={5} mt={5}>
         Print ut denne QR-koden, og lim den på din gjenstand
       </Text>
