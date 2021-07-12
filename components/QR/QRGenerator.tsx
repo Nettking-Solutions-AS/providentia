@@ -26,7 +26,7 @@ export default function QRGenerator({
   return (
     <>
       <QRCode
-        value="http://nettking.no"
+        value="www.nettking.no/1"
         getRef={(c) => {
           myRef = c;
         }}

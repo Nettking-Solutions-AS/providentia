@@ -1,5 +1,5 @@
 import { Error } from "./Types";
-import * as fixtures from "./fixtures.json";
+import { users } from "./fixtures";
 
 const validEmail = (em: string) =>
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -19,7 +19,7 @@ export const validateLogin = (email: string, password: string): Error[] => {
       type: "email",
       message: "Ugyldig epostadresse!",
     });
-  } else if (!fixtures.users.some((user) => user.email === email)) {
+  } else if (!users.some((user) => user.email === email)) {
     validationErrors.push({
       type: "email",
       message: "Det finnes ingen bruker med denne epost-adressen!",
