@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Heading,
@@ -13,12 +13,51 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Item } from "../../lib/Types";
 import { useGlobalState } from "../StateManagement/GlobalState";
+import firebase from "../../firebase/config";
+import { isAdmin } from "../../lib/helpers";
 
 export default function ItemCard({ item }: { item: Item }) {
-  const { dispatch } = useGlobalState();
+  const { state, dispatch } = useGlobalState();
+  const [owners, setOwners] = useState<string[]>();
+  const [imageURL, setImageURL] = useState<string>();
   const updateMissingStatus = () => {
-    dispatch({ type: "TOGGLE_MISSING", payload: { id: item.id } });
+    firebase
+      .firestore()
+      .collection("items")
+      .doc(item.id)
+      .update({
+        status: item.status === "missing" ? "found" : "missing",
+      })
+      .then(() => {
+        dispatch({ type: "TOGGLE_MISSING", payload: { id: item.id } });
+      });
   };
+
+  useEffect(() => {
+    async function fetchOwnerNames() {
+      const userRequests = item.owners.map((owner) =>
+        firebase.firestore().collection("users").doc(owner).get()
+      );
+      const users = await Promise.all(userRequests);
+
+      setOwners(users.map((user) => user.data()?.name));
+    }
+    async function fetchImageURL() {
+      const url = await firebase
+        .storage()
+        .ref(item.imageIDs[0])
+        .getDownloadURL();
+      setImageURL(url);
+    }
+    if (item.imageIDs.length > 0) {
+      fetchImageURL();
+    }
+    if (isAdmin(state.currentUser)) {
+      fetchOwnerNames();
+    } else {
+      setOwners([state.currentUser?.name as string]);
+    }
+  }, []);
 
   return (
     <Box
@@ -33,16 +72,16 @@ export default function ItemCard({ item }: { item: Item }) {
     >
       <HStack alignItems="center" justifyContent="space-between">
         <Heading size="md">
-          {item.name} ({item.owners})
+          {item.name} ({owners})
         </Heading>
         <IconButton icon={<Icon size="sm" as={<AntDesign name="edit" />} />} />
       </HStack>
       <Image
         source={{
-          uri: "https://sample-example.nativebase.io/static/media/dawki-river.ebbf5434.png",
+          uri: imageURL,
         }}
-        alt="image base"
-        resizeMode="cover"
+        alt="Denne gjenstanden har ingen bilder"
+        resizeMode="contain"
         height={150}
         roundedTop="md"
       />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
-import { fetchItem } from "../../lib/requests";
+import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
 
 const styles = StyleSheet.create({
@@ -38,15 +38,19 @@ export default function QRScanner({
       alert("Ugyldig lenke!");
       return;
     }
-    const itemID = Number(matcher[1]);
-    let item = await fetchItem(itemID);
-    if (!item) {
+    const itemID = matcher[1];
+    const item: Item = {
+      id: itemID,
+      ...(
+        await firebase.firestore().collection("items").doc(itemID).get()
+      ).data(),
+    } as Item;
+    if (!item.name) {
       if (!createItem) {
         // eslint-disable-next-line no-alert
         alert("Fant ikke gjenstand!");
         return;
       }
-      item = { id: itemID } as Item;
     }
     setScanned(true);
     setItem(item);
