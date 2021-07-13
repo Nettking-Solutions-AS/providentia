@@ -1,11 +1,22 @@
 import * as React from "react";
-
 import { Button, Heading, View } from "native-base";
+import firebase from "../firebase/config";
 import { useGlobalState } from "../components/StateManagement/GlobalState";
 
 export default function Profile() {
   const { state, dispatch } = useGlobalState();
-  const logout = () => dispatch({ type: "SET_CURRENT_USER", payload: null });
+  const logout = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        dispatch({ type: "SET_CURRENT_USER", payload: null });
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-alert
+        alert(error);
+      });
+  };
   return (
     <View flex={1} alignItems="center">
       <Heading>{state.currentUser?.name}</Heading>

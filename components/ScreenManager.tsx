@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import firebase from "../firebase/config";
 import QR from "../screens/QR";
 import CreateItem from "../screens/CreateItem";
 import ItemOverview from "../screens/ItemOverview";
@@ -10,6 +11,33 @@ import { useGlobalState } from "./StateManagement/GlobalState";
 import UserRegistration from "../screens/UserRegistration";
 
 export default function ScreenManager() {
+  const [loading, setLoading] = useState(true);
+  const { state, dispatch } = useGlobalState();
+
+  useEffect(() => {
+    const usersRef = firebase.firestore().collection("users");
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        usersRef
+          .doc(user.uid)
+          .get()
+          .then((document) => {
+            const userData = document.data();
+            setLoading(false);
+            dispatch({ type: "SET_CURRENT_USER", payload: userData });
+          })
+          .catch(() => {
+            setLoading(false);
+          });
+      } else {
+        setLoading(false);
+      }
+    });
+  }, []);
+
+  if (loading) {
+    return <></>;
+  }
   const screenOptions = (route: { name: string }) => ({
     tabBarIcon: ({
       focused,
@@ -37,8 +65,6 @@ export default function ScreenManager() {
     },
   });
   const Tab = createBottomTabNavigator();
-
-  const { state } = useGlobalState();
 
   return state.currentUser ? (
     <NavigationContainer>
