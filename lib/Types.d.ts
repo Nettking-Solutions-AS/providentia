@@ -2,7 +2,7 @@
 
 export type UserRole = "customer" | "insurer" | "police" | "transportCompany";
 
-export type ID = number;
+export type ID = string;
 
 export type User = {
   id: ID;

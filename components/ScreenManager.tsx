@@ -9,6 +9,8 @@ import ItemOverview from "../screens/ItemOverview";
 import Profile from "../screens/Profile";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import UserRegistration from "../screens/UserRegistration";
+import { isAdmin } from "../lib/helpers";
+import { Item, User } from "../lib/Types";
 
 export default function ScreenManager() {
   const [loading, setLoading] = useState(true);
@@ -25,6 +27,40 @@ export default function ScreenManager() {
             const userData = document.data();
             setLoading(false);
             dispatch({ type: "SET_CURRENT_USER", payload: userData });
+            if (userData && isAdmin(userData as User)) {
+              firebase
+                .firestore()
+                .collection("items")
+                .get()
+                .then((querySnapshot) => {
+                  const items: Item[] = [];
+                  querySnapshot.forEach((doc) => {
+                    items.push({ id: doc.id, ...doc.data() } as Item);
+                  });
+                  dispatch({ type: "SET_ITEMS", payload: items });
+                })
+                .catch((error) => {
+                  // eslint-disable-next-line no-alert
+                  alert(error);
+                });
+            } else {
+              firebase
+                .firestore()
+                .collection("items")
+                .where("ownerIDs", "array-contains", user.uid)
+                .get()
+                .then((querySnapshot) => {
+                  const items: Item[] = [];
+                  querySnapshot.forEach((doc) => {
+                    items.push({ id: doc.id, ...doc.data() } as Item);
+                  });
+                  dispatch({ type: "SET_ITEMS", payload: items });
+                })
+                .catch((error) => {
+                  // eslint-disable-next-line no-alert
+                  alert(error);
+                });
+            }
           })
           .catch(() => {
             setLoading(false);

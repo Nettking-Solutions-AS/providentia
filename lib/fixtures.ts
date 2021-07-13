@@ -2,13 +2,13 @@ import { Item, User } from "./Types";
 
 export const users: User[] = [
   {
-    id: 0,
+    id: "0",
     name: "Ola",
     email: "ola@nordmann.no",
     role: "customer",
   },
   {
-    id: 1,
+    id: "1",
     name: "Admin",
     email: "admin@adminsen.no",
     role: "police",
@@ -16,17 +16,17 @@ export const users: User[] = [
 ];
 export const items: Item[] = [
   {
-    id: 0,
+    id: "0",
     name: "Mitt nøkkelknippe",
     description: "Et kult nøkkelknippe",
     imageIDs: [],
     bounty: 200,
     status: "ok",
     expirationDate: "2021-01-01",
-    owners: [0],
+    owners: ["0"],
   },
   {
-    id: 1,
+    id: "1",
     name: "Sykkel",
     description: "En ganske nais sykkel",
     imageIDs: [],
@@ -35,6 +35,6 @@ export const items: Item[] = [
     lostDate: "2021-07-07",
     lostAt: "Treningssenteret",
     expirationDate: "2022-01-01",
-    owners: [0],
+    owners: ["0"],
   },
 ];
