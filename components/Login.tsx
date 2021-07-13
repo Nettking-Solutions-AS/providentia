@@ -11,33 +11,58 @@ import {
   HStack,
 } from "native-base";
 import { useState } from "react";
-import { useGlobalState } from "./StateManagement/GlobalState";
-import { fetchUserData } from "../lib/requests";
+import firebase from "../firebase/config";
 import { Error } from "../lib/Types";
-import { validateLogin } from "../lib/validation";
+import { validateEmail, validatePassword } from "../lib/validation";
 
-export default function Login() {
+export default function Login({
+  showRegistration,
+}: {
+  showRegistration: () => void;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<Error[]>([]);
 
-  const { dispatch } = useGlobalState();
-
-  const getErrorsByType = (type: string) =>
-    errors.filter((e) => e.type === type);
-
-  const login = async () => {
-    const validationErrors = validateLogin(email, password);
-
-    // TODO: Backend validation
+  const onLoginPress = () => {
+    const validationErrors = [
+      ...validateEmail(email),
+      ...validatePassword(password),
+    ];
 
     setErrors(validationErrors);
     if (validationErrors.length === 0) {
-      const { user, items } = await fetchUserData(email);
-      dispatch({ type: "SET_CURRENT_USER", payload: user });
-      dispatch({ type: "SET_ITEMS", payload: items });
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then((response) => {
+          const usersRef = firebase.firestore().collection("users");
+          usersRef
+            .doc(response.user?.uid)
+            .get()
+            .then((firestoreDocument) => {
+              if (!firestoreDocument.exists) {
+                // eslint-disable-next-line no-alert
+                alert("Brukeren eksisterer ikke!");
+                // return;
+              }
+              // const user = firestoreDocument.data();
+              // TODO: Fetch user items
+            })
+            .catch((error) => {
+              // eslint-disable-next-line no-alert
+              alert(error);
+            });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
+        });
     }
   };
+
+  const getErrorsByType = (type: string) =>
+    errors.filter((e) => e.type === type);
 
   return (
     <Box flex={1} p={2} w="90%" mx="auto">
@@ -73,7 +98,11 @@ export default function Login() {
           </FormControl.ErrorMessage>
         </FormControl>
         <VStack space={2}>
-          <Button colorScheme="cyan" _text={{ color: "white" }} onPress={login}>
+          <Button
+            colorScheme="cyan"
+            _text={{ color: "white" }}
+            onPress={onLoginPress}
+          >
             Login
           </Button>
         </VStack>
@@ -81,7 +110,10 @@ export default function Login() {
           <Text fontSize="sm" color="muted.700" fontWeight={400}>
             Har du ikke bruker?{" "}
           </Text>
-          <Link _text={{ color: "cyan.500", bold: true, fontSize: "sm" }}>
+          <Link
+            _text={{ color: "cyan.500", bold: true, fontSize: "sm" }}
+            onPress={showRegistration}
+          >
             Registrer deg
           </Link>
         </HStack>
