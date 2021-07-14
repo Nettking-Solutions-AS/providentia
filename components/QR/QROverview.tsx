@@ -10,6 +10,7 @@ export default function QROverview({
   const openBrowser = async () => {
     await WebBrowser.openBrowserAsync("https://nettking.no");
   };
+
   return (
     <>
       <Text>QR-koder brukes for å gjenkjenne gjenstander</Text>

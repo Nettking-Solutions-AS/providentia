@@ -8,6 +8,7 @@ import {
   Input,
   Button,
 } from "native-base";
+import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
 import { Error } from "../lib/Types.d";
 import {
@@ -64,87 +65,99 @@ export default function Registration() {
         });
     }
   };
-  return (
-    <NativeBaseProvider>
-      <Box flex={1} p={2} w="90%" mx="auto">
-        <Heading size="lg" color="primary.500">
-          Velkommen!
-        </Heading>
-        <Heading color="muted.400" size="xs">
-          Registrer deg for å fortsette!
-        </Heading>
 
-        <VStack space={2} mt={5}>
-          <FormControl
-            isRequired
-            isInvalid={getErrorsByType("name").length > 0}
-          >
-            <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
-            >
-              Navn
-            </FormControl.Label>
-            <Input type="text" onChangeText={(text) => setName(text)} />
-            <FormControl.ErrorMessage>
-              {getErrorsByType("name").map((e) => e.message)}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          <FormControl
-            isRequired
-            isInvalid={getErrorsByType("email").length > 0}
-          >
-            <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
-            >
-              Epost
-            </FormControl.Label>
-            <Input type="email" onChangeText={(text) => setEmail(text)} />
-            <FormControl.ErrorMessage>
-              {getErrorsByType("email").map((e) => e.message)}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          <FormControl
-            isRequired
-            isInvalid={getErrorsByType("password").length > 0}
-          >
-            <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
-            >
-              Passord
-            </FormControl.Label>
-            <Input type="password" onChangeText={(text) => setPassword(text)} />
-            <FormControl.ErrorMessage>
-              {getErrorsByType("password").map((e) => e.message)}
-            </FormControl.ErrorMessage>
-          </FormControl>
-          <FormControl
-            isRequired
-            isInvalid={getErrorsByType("confirmPassword").length > 0}
-          >
-            <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
-            >
-              Bekreft passord
-            </FormControl.Label>
-            <Input
-              type="password"
-              onChangeText={(text) => setConfirmPassword(text)}
-            />
-            <FormControl.ErrorMessage>
-              {getErrorsByType("confirmPassword").map((e) => e.message)}
-            </FormControl.ErrorMessage>
-          </FormControl>
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+  });
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <NativeBaseProvider>
+        <Box flex={1} p={2} w="90%" mx="auto">
+          <Heading size="lg" color="primary.500">
+            Velkommen!
+          </Heading>
+          <Heading color="muted.400" size="xs">
+            Registrer deg for å fortsette!
+          </Heading>
+
           <VStack space={2} mt={5}>
-            <Button
-              colorScheme="cyan"
-              _text={{ color: "white" }}
-              onPress={onRegisterPress}
+            <FormControl
+              isRequired
+              isInvalid={getErrorsByType("name").length > 0}
             >
-              Registrer deg
-            </Button>
+              <FormControl.Label
+                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              >
+                Navn
+              </FormControl.Label>
+              <Input type="text" onChangeText={(text) => setName(text)} />
+              <FormControl.ErrorMessage>
+                {getErrorsByType("name").map((e) => e.message)}
+              </FormControl.ErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={getErrorsByType("email").length > 0}
+            >
+              <FormControl.Label
+                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              >
+                Epost
+              </FormControl.Label>
+              <Input type="email" onChangeText={(text) => setEmail(text)} />
+              <FormControl.ErrorMessage>
+                {getErrorsByType("email").map((e) => e.message)}
+              </FormControl.ErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={getErrorsByType("password").length > 0}
+            >
+              <FormControl.Label
+                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              >
+                Passord
+              </FormControl.Label>
+              <Input
+                type="password"
+                onChangeText={(text) => setPassword(text)}
+              />
+              <FormControl.ErrorMessage>
+                {getErrorsByType("password").map((e) => e.message)}
+              </FormControl.ErrorMessage>
+            </FormControl>
+            <FormControl
+              isRequired
+              isInvalid={getErrorsByType("confirmPassword").length > 0}
+            >
+              <FormControl.Label
+                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              >
+                Bekreft passord
+              </FormControl.Label>
+              <Input
+                type="password"
+                onChangeText={(text) => setConfirmPassword(text)}
+              />
+              <FormControl.ErrorMessage>
+                {getErrorsByType("confirmPassword").map((e) => e.message)}
+              </FormControl.ErrorMessage>
+            </FormControl>
+            <VStack space={2} mt={5}>
+              <Button
+                colorScheme="cyan"
+                _text={{ color: "white" }}
+                onPress={onRegisterPress}
+              >
+                Registrer deg
+              </Button>
+            </VStack>
           </VStack>
-        </VStack>
-      </Box>
-    </NativeBaseProvider>
+        </Box>
+      </NativeBaseProvider>
+    </SafeAreaView>
   );
 }
