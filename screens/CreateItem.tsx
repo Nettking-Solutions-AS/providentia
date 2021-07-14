@@ -1,27 +1,26 @@
 import * as React from "react";
 import { StyleSheet, SafeAreaView } from "react-native";
-import { Text, View } from "native-base";
+import CreateItem from "../components/CreateItem";
+import { Item } from "../lib/Types";
 
-export default function CreateItem() {
+export default function CreateItemScreen({
+  route,
+  navigation,
+}: {
+  route: any;
+  navigation: any;
+}) {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
   });
-
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        // Use a separate css file when implementing
-        /* eslint-disable-next-line react-native/no-inline-styles */
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text>Edit Item</Text>
-      </View>
+      <CreateItem
+        initialItem={route.params ?? ({} as Item)}
+        displayItemOverview={() => navigation.navigate("Mine gjenstander")}
+      />
     </SafeAreaView>
   );
 }

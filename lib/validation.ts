@@ -1,4 +1,4 @@
-import { Error } from "./Types";
+import { Error, Status } from "./Types";
 
 const validEmail = (em: string) =>
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -69,4 +69,70 @@ export const validateName = (name: string): Error[] => {
     });
   }
   return validationErrors;
+};
+
+export const validateCreateItem = (
+  name: string,
+  description: string,
+  images: string[],
+  bounty: number,
+  lostAt: string | undefined,
+  lostDate: string | undefined,
+  expirationDate: string,
+  owners: string[],
+  status: Status
+): Error[] => {
+  const validationErrorsAddItem: Error[] = [];
+  if (name.length === 0) {
+    validationErrorsAddItem.push({
+      type: "name",
+      message: "Du må skrive inn navn!",
+    });
+  }
+
+  if (description.length === 0) {
+    validationErrorsAddItem.push({
+      type: "description",
+      message: "Du må skrive inn en beskrivelse!",
+    });
+  }
+
+  if (images.length === 0) {
+    validationErrorsAddItem.push({
+      type: "images",
+      message: "Du må legge til minst ett bilde!",
+    });
+  }
+
+  if (bounty <= 0) {
+    validationErrorsAddItem.push({
+      type: "bounty",
+      message: "Du må fylle ut belønning!",
+    });
+  }
+
+  if (status === "missing") {
+    if (lostAt.length === 0) {
+      validationErrorsAddItem.push({
+        type: "lostAt",
+        message: "Du må skrive inn hvor du mistet gjenstanden!",
+      });
+    }
+
+    if (lostDate.length === 0) {
+      validationErrorsAddItem.push({
+        type: "lostDate",
+        message: "Du må skrive inn dato for når du mistet gjenstanden!",
+      });
+    }
+  }
+
+  if (expirationDate.length === 0) {
+    validationErrorsAddItem.push({
+      type: "expirationDate",
+      message: "Du må skrive inn en utløpsdato!",
+    });
+  }
+
+  return validationErrorsAddItem;
 };

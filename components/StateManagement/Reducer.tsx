@@ -10,6 +10,15 @@ const Reducer = (state: GlobalState, action: DispatchObject) => {
       return { ...state, currentUser: action.payload };
     case "SET_ITEMS":
       return { ...state, items: action.payload };
+    case "ADD_ITEM":
+      return {
+        ...state,
+        items: [
+          ...(state.items?.filter((item) => item.id !== action.payload.id) ??
+            []),
+          action.payload,
+        ],
+      };
     case "TOGGLE_MISSING":
       return {
         ...state,
