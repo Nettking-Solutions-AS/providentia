@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, Heading, View } from "native-base";
+import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
 import { useGlobalState } from "../components/StateManagement/GlobalState";
 
@@ -17,13 +18,22 @@ export default function Profile() {
         alert(error);
       });
   };
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+  });
+
   return (
-    <View flex={1} alignItems="center">
-      <Heading>{state.currentUser?.name}</Heading>
-      <Heading size="md" mt={2} mb={5}>
-        {state.currentUser?.email}
-      </Heading>
-      <Button onPress={logout}>Logg ut</Button>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <View flex={1} alignItems="center">
+        <Heading>{state.currentUser?.name}</Heading>
+        <Heading size="md" mt={2} mb={5}>
+          {state.currentUser?.email}
+        </Heading>
+        <Button onPress={logout}>Logg ut</Button>
+      </View>
+    </SafeAreaView>
   );
 }
