@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import {
   NativeBaseProvider,
   Box,
+  Text,
   Heading,
   VStack,
   FormControl,
   Input,
   Button,
+  HStack,
+  Link,
 } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
@@ -17,7 +20,7 @@ import {
   validatePassword,
 } from "../lib/validation";
 
-export default function Registration() {
+export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -76,10 +79,10 @@ export default function Registration() {
     <SafeAreaView style={styles.container}>
       <NativeBaseProvider>
         <Box flex={1} p={2} w="90%" mx="auto">
-          <Heading size="lg" color="primary.500">
+          <Heading size="2xl" color="#1ed760">
             Velkommen!
           </Heading>
-          <Heading color="muted.400" size="xs">
+          <Heading color="#292929" size="md">
             Registrer deg for å fortsette!
           </Heading>
 
@@ -89,12 +92,22 @@ export default function Registration() {
               isInvalid={getErrorsByType("name").length > 0}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "#121212",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Navn
               </FormControl.Label>
-              <Input type="text" onChangeText={(text) => setName(text)} />
-              <FormControl.ErrorMessage>
+              <Input
+                size="lg"
+                type="text"
+                onChangeText={(text) => setName(text)}
+              />
+              <FormControl.ErrorMessage
+                _text={{ color: "#e22134", fontSize: "md" }}
+              >
                 {getErrorsByType("name").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -103,12 +116,22 @@ export default function Registration() {
               isInvalid={getErrorsByType("email").length > 0}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "#121212",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Epost
               </FormControl.Label>
-              <Input type="email" onChangeText={(text) => setEmail(text)} />
-              <FormControl.ErrorMessage>
+              <Input
+                size="lg"
+                type="email"
+                onChangeText={(text) => setEmail(text)}
+              />
+              <FormControl.ErrorMessage
+                _text={{ color: "#e22134", fontSize: "md" }}
+              >
                 {getErrorsByType("email").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -117,15 +140,22 @@ export default function Registration() {
               isInvalid={getErrorsByType("password").length > 0}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "#121212",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Passord
               </FormControl.Label>
               <Input
+                size="lg"
                 type="password"
                 onChangeText={(text) => setPassword(text)}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "#e22134", fontSize: "md" }}
+              >
                 {getErrorsByType("password").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -134,27 +164,46 @@ export default function Registration() {
               isInvalid={getErrorsByType("confirmPassword").length > 0}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "#121212",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Bekreft passord
               </FormControl.Label>
               <Input
+                size="lg"
                 type="password"
                 onChangeText={(text) => setConfirmPassword(text)}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "#e22134", fontSize: "md" }}
+              >
                 {getErrorsByType("confirmPassword").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
             <VStack space={2} mt={5}>
               <Button
-                colorScheme="cyan"
-                _text={{ color: "white" }}
+                size="md"
+                colorScheme="green"
+                _text={{ color: "#121212" }}
                 onPress={onRegisterPress}
               >
                 Registrer deg
               </Button>
             </VStack>
+            <HStack justifyContent="center">
+              <Text fontSize="md" color="#121212" fontWeight={400}>
+                Har du allerede bruker?{" "}
+              </Text>
+              <Link
+                _text={{ color: "#1ed760", bold: true, fontSize: "md" }}
+                onPress={showLogin}
+              >
+                Logg inn
+              </Link>
+            </HStack>
           </VStack>
         </Box>
       </NativeBaseProvider>

@@ -71,6 +71,9 @@ export const validateName = (name: string): Error[] => {
   return validationErrors;
 };
 
+const validDate = (da: string) =>
+  /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/.test(da);
+
 export const validateCreateItem = (
   name: string,
   description: string,
@@ -124,6 +127,11 @@ export const validateCreateItem = (
         type: "lostDate",
         message: "Du må skrive inn dato for når du mistet gjenstanden!",
       });
+    } else if (!validDate(lostDate)) {
+      validationErrorsAddItem.push({
+        type: "lostDate",
+        message: "Ugyldig dato!",
+      });
     }
   }
 
@@ -132,7 +140,11 @@ export const validateCreateItem = (
       type: "expirationDate",
       message: "Du må skrive inn en utløpsdato!",
     });
+  } else if (!validDate(expirationDate)) {
+    validationErrorsAddItem.push({
+      type: "expirationDate",
+      message: "Ugyldig dato!",
+    });
   }
-
   return validationErrorsAddItem;
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import firebase from "../firebase/config";
@@ -102,13 +102,21 @@ export default function ScreenManager() {
   });
   const Tab = createBottomTabNavigator();
 
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      card: "#121212",
+    },
+  };
+
   return state.currentUser ? (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Tab.Navigator
         screenOptions={({ route }) => screenOptions(route)}
         tabBarOptions={{
-          activeTintColor: "blue",
-          inactiveTintColor: "gray",
+          activeTintColor: "#2e77d0",
+          inactiveTintColor: "white",
         }}
         initialRouteName="Mine gjenstander"
       >

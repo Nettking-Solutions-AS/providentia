@@ -13,12 +13,27 @@ export default function QROverview({
 
   return (
     <>
-      <Text>QR-koder brukes for å gjenkjenne gjenstander</Text>
-      <Button mb={15} mt={5} onPress={() => displayQRGenerator()}>
+      <Text color="primary.150">
+        QR-koder brukes for å gjenkjenne gjenstander
+      </Text>
+      <Button
+        size="md"
+        colorScheme="green"
+        _text={{ color: "primary.150" }}
+        mb={15}
+        mt={5}
+        onPress={() => displayQRGenerator()}
+      >
         Generer QR-kode
       </Button>
       <Text>Eller</Text>
-      <Button mt={15} onPress={openBrowser}>
+      <Button
+        size="md"
+        colorScheme="green"
+        _text={{ color: "primary.150" }}
+        mt={15}
+        onPress={openBrowser}
+      >
         Bestill QR-koder
       </Button>
     </>

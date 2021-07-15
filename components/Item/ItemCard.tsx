@@ -95,14 +95,19 @@ export default function ItemCard({
         height={150}
         roundedTop="md"
       />
-      <Text color="gray.700" mt={5} mb={5}>
+      <Text color="primary.150" mt={5} mb={5}>
         {item.description}
       </Text>
       <Tooltip
         label="Du kan skrive hvor og når du mistet gjenstanden ved å trykke på rediger"
         openDelay={200}
       >
-        <Button onPress={updateMissingStatus}>
+        <Button
+          size="md"
+          colorScheme="green"
+          _text={{ color: "primary.150" }}
+          onPress={updateMissingStatus}
+        >
           {item.status === "missing" ? "Meld funnet" : "Meld savnet"}
         </Button>
       </Tooltip>

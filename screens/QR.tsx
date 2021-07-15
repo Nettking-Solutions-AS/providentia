@@ -18,8 +18,10 @@ export default function QR() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View flex={1} alignItems="center">
-        <Heading>QR</Heading>
+      <View flex={1} p={2} alignItems="center">
+        <Heading size="2xl" color="#1ed760">
+          QR
+        </Heading>
         {generateQR ? (
           <QRGenerator hideQRGenerator={hideQRGenerator} />
         ) : (
