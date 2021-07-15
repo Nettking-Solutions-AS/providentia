@@ -23,6 +23,7 @@ export default function QRGenerator({
   return (
     <>
       <Image
+        mt={10}
         size={150}
         resizeMode="contain"
         source={{
@@ -30,14 +31,22 @@ export default function QRGenerator({
         }}
         alt="Ny QR-kode"
       />
-      <Text textAlign="center" mb={5} mt={5}>
+      <Text color="primary.150" textAlign="center" mb={5} mt={5}>
         Print ut denne QR-koden, og lim den på din gjenstand
       </Text>
-      <Button mb={5} onPress={openShareDialogAsync}>
+      <Button
+        size="md"
+        colorScheme="green"
+        _text={{ color: "primary.150" }}
+        mb={5}
+        onPress={openShareDialogAsync}
+      >
         Del / Skriv ut
       </Button>
       <Button
-        backgroundColor={useTheme().colors.red[400]}
+        size="md"
+        _text={{ color: "primary.200" }}
+        backgroundColor={useTheme().colors.blue[600]}
         onPress={hideQRGenerator}
       >
         Tilbake
