@@ -21,6 +21,7 @@ import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
 import firebase from "../firebase/config";
 import QRScanner from "./QR/QRScanner";
+import firebase from "../firebase/config";
 
 export default function CreateItem({
   initialItem,
@@ -81,24 +82,20 @@ export default function CreateItem({
 
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
-      const data = {
-        name,
-        description,
-        imageIDs: images,
-        bounty,
-        lostAt,
-        lostDate,
-        expirationDate,
-        owners,
-        status,
-      };
-      const itemRef = firebase.firestore().collection("items");
-      itemRef
-        .doc(initialItem.id)
-        .set(data)
-        .catch((error) => {
-          // eslint-disable-next-line no-alert
-          alert(error);
+      firebase
+        .firestore()
+        .collection("items")
+        .doc(id)
+        .set({
+          name,
+          description,
+          imageIDs: images,
+          bounty,
+          lostAt,
+          lostDate,
+          expirationDate,
+          owners,
+          status,
         })
         .then(() => {
           dispatch({
@@ -116,9 +113,13 @@ export default function CreateItem({
               status,
             },
           });
+          resetForm();
+          displayItemOverview();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
         });
-      resetForm();
-      displayItemOverview();
     }
   };
 
