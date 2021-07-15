@@ -80,9 +80,6 @@ export default function CreateItem({
       status
     );
 
-    // TODO: Backend validation (add ID after creating in backend)
-    // TODO: validate that there is an ID (frontend)
-
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
       firebase
