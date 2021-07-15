@@ -36,7 +36,9 @@ export default function CreateItem({
   const [description, setDescription] = useState(initialItem.description ?? "");
   const [images, setImages] = useState(initialItem.imageIDs ?? "");
   const [bounty, setBounty] = useState<number | "">(initialItem.bounty ?? "");
-  const [status, setStatus] = useState<Status>(initialItem.status ?? "");
+  const [status, setStatus] = useState<Status>(
+    initialItem.status ?? "registered"
+  );
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
   const [lostDate, setLostDate] = useState(initialItem.lostDate ?? "");
   const [expirationDate, setExpirationDate] = useState(
