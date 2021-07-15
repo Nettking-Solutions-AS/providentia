@@ -145,7 +145,7 @@ export default function CreateItem({
       )}
       {!scanQR && (
         <Box flex={1} p={2} w="90%" mx="auto">
-          <Heading size="lg" textAlign="center" color="primary.500">
+          <Heading size="2xl" textAlign="center" color="primary.50">
             Ny gjenstand
           </Heading>
 
@@ -155,16 +155,23 @@ export default function CreateItem({
               isInvalid={getErrorsByType("name").length > 0}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Gjenstandens navn
               </FormControl.Label>
               <Input
                 type="text"
                 value={name}
+                placeholder="Feks. Nøkkelknippe"
                 onChangeText={(text: string) => setName(text)}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("name").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -174,31 +181,42 @@ export default function CreateItem({
               mb={5}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Beskrivelse
               </FormControl.Label>
               <Input
                 type="text"
                 value={description}
+                placeholder="Et nydelig nøkkelknippe"
                 onChangeText={(text: string) => setDescription(text)}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("description").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
             <FormControl isRequired mb={5}>
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Bilder
               </FormControl.Label>
               <Button
-                colorScheme="cyan"
-                _text={{ color: "white" }}
+                colorScheme="green"
+                _text={{ color: "primary.150" }}
                 onPress={pickImage}
               >
-                Pick an image from camera roll
+                Velg et bilde fra kamerarullen
               </Button>
               {images?.length > 0 && (
                 <Image source={{ uri: images[0] }} width={200} height={200} />
@@ -210,16 +228,23 @@ export default function CreateItem({
               mb={5}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Utlovet dusør ved tap
               </FormControl.Label>
               <Input
                 type="number"
                 value={bounty}
+                placeholder="200 kr"
                 onChangeText={(text: string) => setBounty(Number(text))}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("bounty").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -229,7 +254,11 @@ export default function CreateItem({
               mb={5}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Status
               </FormControl.Label>
@@ -251,7 +280,9 @@ export default function CreateItem({
                 <Select.Item label="Under transport" value="inTransit" />
               </Select>
 
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("status").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
@@ -264,9 +295,9 @@ export default function CreateItem({
                 >
                   <FormControl.Label
                     _text={{
-                      color: "muted.700",
-                      fontSize: "sm",
-                      fontWeight: 600,
+                      color: "primary.150",
+                      fontSize: "lg",
+                      fontWeight: 500,
                     }}
                   >
                     Hvor ble gjenstanden mistet?
@@ -274,9 +305,12 @@ export default function CreateItem({
                   <Input
                     type="text"
                     value={lostAt}
+                    placeholder="Feks. Haldensgata 24, 1768 Halden"
                     onChangeText={(text: string) => setLostAt(text)}
                   />
-                  <FormControl.ErrorMessage>
+                  <FormControl.ErrorMessage
+                    _text={{ color: "primary.250", fontSize: "md" }}
+                  >
                     {getErrorsByType("lostAt").map((e) => e.message)}
                   </FormControl.ErrorMessage>
                 </FormControl>
@@ -287,9 +321,9 @@ export default function CreateItem({
                 >
                   <FormControl.Label
                     _text={{
-                      color: "muted.700",
-                      fontSize: "sm",
-                      fontWeight: 600,
+                      color: "primary.150",
+                      fontSize: "lg",
+                      fontWeight: 500,
                     }}
                   >
                     Når ble gjenstanden mistet?
@@ -297,9 +331,12 @@ export default function CreateItem({
                   <Input
                     type="text"
                     value={lostDate}
+                    placeholder="20.01.2021"
                     onChangeText={(text: string) => setLostDate(text)}
                   />
-                  <FormControl.ErrorMessage>
+                  <FormControl.ErrorMessage
+                    _text={{ color: "primary.250", fontSize: "md" }}
+                  >
                     {getErrorsByType("lostDate").map((e) => e.message)}
                   </FormControl.ErrorMessage>
                 </FormControl>
@@ -311,44 +348,77 @@ export default function CreateItem({
               mb={5}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
               >
                 Varighet
               </FormControl.Label>
               <Input
                 type="text"
                 value={expirationDate}
+                placeholder="20.12.2021"
                 onChangeText={(text: string) => setExpirationDate(text)}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("expirationDate").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
             <FormControl isInvalid={getErrorsByType("email").length > 0}>
-              <FormControl.Label>Brukere med tilgang</FormControl.Label>
+              <FormControl.Label
+                _text={{
+                  color: "primary.150",
+                  fontSize: "lg",
+                  fontWeight: 500,
+                }}
+              >
+                Brukere med tilgang
+              </FormControl.Label>
               <Input
                 type="email"
                 value={owners}
+                placeholder="kari@nordmann.no"
                 onChangeText={(text: string) => setOwners([text])}
               />
-              <FormControl.ErrorMessage>
+              <FormControl.ErrorMessage
+                _text={{ color: "primary.250", fontSize: "md" }}
+              >
                 {getErrorsByType("email").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
             <VStack space={2} alignItems="center">
-              <Text fontSize="xl">Knytt til ID</Text>
+              <Heading fontSize="lg">Knytt til ID</Heading>
               <HStack mt={15} alignItems="center">
-                <Button onPress={() => setScanQR(true)} mr={15}>
+                <Button
+                  size="md"
+                  colorScheme="green"
+                  _text={{ color: "primary.150" }}
+                  onPress={() => setScanQR(true)}
+                  mr={15}
+                >
                   QR
                 </Button>
-                <Text mr={15}>Eller</Text>
-                <Button>NFC</Button>
+                <Text color="primary.150" fontSize="lg" mr={15}>
+                  Eller
+                </Text>
+                <Button
+                  size="md"
+                  colorScheme="green"
+                  _text={{ color: "primary.150" }}
+                >
+                  NFC
+                </Button>
               </HStack>
 
               <VStack space={2} mt={15}>
                 <Button
-                  colorScheme="cyan"
-                  _text={{ color: "white" }}
+                  size="md"
+                  colorScheme="green"
+                  _text={{ color: "primary.150" }}
                   onPress={() => onRegister()}
                 >
                   Opprett gjenstand

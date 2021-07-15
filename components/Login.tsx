@@ -74,7 +74,7 @@ export default function Login({
   return (
     <SafeAreaView style={styles.container}>
       <Box flex={1} p={2} w="90%" mx="auto">
-        <Heading size="lg" textAlign="center" color="primary.500">
+        <Heading textAlign="center" color="primary.50" size="2xl">
           Providentia
         </Heading>
         <VStack space={2} mt={5}>
@@ -83,12 +83,18 @@ export default function Login({
             isInvalid={getErrorsByType("email").length > 0}
           >
             <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              _text={{ color: "primary.150", fontSize: "lg", fontWeight: 500 }}
             >
               Epost
             </FormControl.Label>
-            <Input type="email" onChangeText={(text) => setEmail(text)} />
-            <FormControl.ErrorMessage>
+            <Input
+              size="lg"
+              type="email"
+              onChangeText={(text) => setEmail(text)}
+            />
+            <FormControl.ErrorMessage
+              _text={{ color: "primary.250", fontSize: "md" }}
+            >
               {getErrorsByType("email").map((e) => e.message)}
             </FormControl.ErrorMessage>
           </FormControl>
@@ -98,30 +104,33 @@ export default function Login({
             mb={5}
           >
             <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+              _text={{ color: "primary.150", fontSize: "lg", fontWeight: 500 }}
             >
               Passord
             </FormControl.Label>
             <Input type="password" onChangeText={(text) => setPassword(text)} />
-            <FormControl.ErrorMessage>
+            <FormControl.ErrorMessage
+              _text={{ color: "primary.250", fontSize: "md" }}
+            >
               {getErrorsByType("password").map((e) => e.message)}
             </FormControl.ErrorMessage>
           </FormControl>
           <VStack space={2}>
             <Button
-              colorScheme="cyan"
-              _text={{ color: "white" }}
+              size="md"
+              colorScheme="green"
+              _text={{ color: "primary.150" }}
               onPress={onLoginPress}
             >
               Login
             </Button>
           </VStack>
           <HStack justifyContent="center">
-            <Text fontSize="sm" color="muted.700" fontWeight={400}>
+            <Text fontSize="md" color="primary.150" fontWeight={400}>
               Har du ikke bruker?{" "}
             </Text>
             <Link
-              _text={{ color: "cyan.500", bold: true, fontSize: "sm" }}
+              _text={{ color: "primary.50", bold: true, fontSize: "md" }}
               onPress={showRegistration}
             >
               Registrer deg
