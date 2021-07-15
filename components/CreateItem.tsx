@@ -10,6 +10,7 @@ import {
   VStack,
   Select,
   ScrollView,
+  Badge,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
@@ -21,7 +22,6 @@ import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
 import firebase from "../firebase/config";
 import QRScanner from "./QR/QRScanner";
-import firebase from "../firebase/config";
 
 export default function CreateItem({
   initialItem,
@@ -66,6 +66,7 @@ export default function CreateItem({
 
   const onRegister = async () => {
     const validationErrorsAddItem = validateCreateItem(
+      id,
       name,
       description,
       images,
@@ -443,23 +444,35 @@ export default function CreateItem({
               </FormControl.ErrorMessage>
             </FormControl>
             <VStack space={2} alignItems="center">
-              <Heading fontSize="lg">Knytt til ID</Heading>
-              <HStack mt={15} alignItems="center">
-                <Button
-                  size="md"
-                  _text={{ color: "primary.200" }}
-                  onPress={() => setScanQR(true)}
-                  mr={15}
-                >
-                  QR
-                </Button>
-                <Text color="primary.150" fontSize="lg" mr={15}>
-                  Eller
-                </Text>
-                <Button size="md" _text={{ color: "primary.200" }}>
-                  NFC
-                </Button>
-              </HStack>
+              <FormControl
+                alignItems="center"
+                isRequired
+                isInvalid={getErrorsByType("id").length > 0}
+              >
+                <FormControl.Label>Knytt til ID</FormControl.Label>
+                {id && (
+                  <Badge colorScheme="success" padding={2}>
+                    {id}
+                  </Badge>
+                )}
+                <HStack mt={15} alignItems="center">
+                  <Button
+                    onPress={() => setScanQR(true)}
+                    size="md"
+                    _text={{ color: "primary.200" }}
+                    mr={15}
+                  >
+                    QR
+                  </Button>
+                  <Text mr={15}>Eller</Text>
+                  <Button size="md" _text={{ color: "primary.200" }}>
+                    NFC
+                  </Button>
+                </HStack>
+                <FormControl.ErrorMessage>
+                  {getErrorsByType("id").map((e) => e.message)}
+                </FormControl.ErrorMessage>
+              </FormControl>
 
               <VStack space={2} mt={15}>
                 <Button
