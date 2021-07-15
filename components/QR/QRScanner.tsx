@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Platform } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
@@ -61,6 +61,11 @@ export default function QRScanner({
   }
 
   if (!hasPermission) {
+    if (Platform.OS === "web" && !scanned) {
+      // eslint-disable-next-line no-alert
+      const id = prompt("Skriv inn scannet ID");
+      handleBarCodeScanned({ data: `/${id}`, type: "256" });
+    }
     return <Text>Ingen tilgang til kamera</Text>;
   }
 
