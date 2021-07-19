@@ -16,6 +16,7 @@ import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
+import firebase from "../firebase/config";
 import QRScanner from "./QR/QRScanner";
 
 export default function CreateItem({
@@ -78,21 +79,42 @@ export default function CreateItem({
 
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
-      dispatch({
-        type: "ADD_ITEM",
-        payload: {
-          id,
-          name,
-          description,
-          imageIDs: images,
-          bounty,
-          lostAt,
-          lostDate,
-          expirationDate,
-          owners,
-          status,
-        },
-      });
+      const data = {
+        name,
+        description,
+        imageIDs: images,
+        bounty,
+        lostAt,
+        lostDate,
+        expirationDate,
+        owners,
+        status,
+      };
+      const itemRef = firebase.firestore().collection("items");
+      itemRef
+        .doc(initialItem.id)
+        .set(data)
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
+        })
+        .then(() => {
+          dispatch({
+            type: "ADD_ITEM",
+            payload: {
+              id,
+              name,
+              description,
+              imageIDs: images,
+              bounty,
+              lostAt,
+              lostDate,
+              expirationDate,
+              owners,
+              status,
+            },
+          });
+        });
       resetForm();
       displayItemOverview();
     }
