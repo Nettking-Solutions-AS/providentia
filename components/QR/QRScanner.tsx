@@ -88,11 +88,15 @@ export default function QRScanner({
     setItem(item);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     sendPush();
     sendEmailNotification();
 =======
 
     // Send push notification
+=======
+
+>>>>>>> 0fe9c33 (Push notifications)
     if (Constants.isDevice) {
       const pushToken = await readPushToken();
       sendPushNotification(
@@ -103,6 +107,7 @@ export default function QRScanner({
         true
       );
     }
+<<<<<<< HEAD
 
     const email = firebase.auth().currentUser?.email;
     const name = firebase.auth().currentUser?.displayName;
@@ -123,6 +128,10 @@ export default function QRScanner({
 >>>>>>> 976b3c9 (Email notifications)
 =======
 >>>>>>> c3dfaeb (Temp removal)
+=======
+    // Send push notification
+    // Send email notification
+>>>>>>> 0fe9c33 (Push notifications)
   };
 
   if (hasPermission === null) {
