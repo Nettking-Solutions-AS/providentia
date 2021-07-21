@@ -6,6 +6,8 @@ import { sendPushNotification } from "../Notifications/PushNotification";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
 import { readPushToken } from "../../lib/helpers";
+import EmailNotification from "../Notifications/EmailNotification";
+import sendEmail from "../Notifications/EmailNotification";
 
 const styles = StyleSheet.create({
   container: {
@@ -58,6 +60,7 @@ export default function QRScanner({
     setScanned(true);
     setItem(item);
 
+    // Send push notification
     if (Constants.isDevice) {
       const pushToken = await readPushToken();
       sendPushNotification(
@@ -68,8 +71,20 @@ export default function QRScanner({
         true
       );
     }
-    // Send push notification
+
+    const email = firebase.auth().currentUser?.email;
+    const name = firebase.auth().currentUser?.displayName;
+
     // Send email notification
+    sendEmail(
+      `${email}`,
+      "En av dine savnede gjenstander ble nylig funnet!",
+      `Hei ${name}! Vi anbefaler på at du betaler en dusør til den som fant gjenstanden din.`,
+      { cc: "admin@providentia.no" }
+    ).then(() => {
+      // eslint-disable-next-line no-console
+      console.log("Your message was successfully sent!");
+    });
   };
 
   if (hasPermission === null) {
