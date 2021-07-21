@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
+import Constants from "expo-constants";
+import { sendPushNotification } from "../Notifications/PushNotification";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
+import { readPushToken } from "../../lib/helpers";
 
 const styles = StyleSheet.create({
   container: {
@@ -54,6 +57,19 @@ export default function QRScanner({
     }
     setScanned(true);
     setItem(item);
+
+    if (Constants.isDevice) {
+      const pushToken = await readPushToken();
+      sendPushNotification(
+        pushToken,
+        "Savnet gjenstand funnet!",
+        "En gjenstand du har satt som savnet har nå blitt funnet.",
+        true,
+        true
+      );
+    }
+    // Send push notification
+    // Send email notification
   };
 
   if (hasPermission === null) {
