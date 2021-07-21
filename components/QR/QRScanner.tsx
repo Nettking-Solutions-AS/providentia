@@ -86,8 +86,24 @@ export default function QRScanner({
     }
     setScanned(true);
     setItem(item);
+<<<<<<< HEAD
     sendPush();
     sendEmailNotification();
+=======
+
+    if (Constants.isDevice) {
+      const pushToken = await readPushToken();
+      sendPushNotification(
+        pushToken,
+        "Savnet gjenstand funnet!",
+        "En gjenstand du har satt som savnet har nå blitt funnet.",
+        true,
+        true
+      );
+    }
+    // Send push notification
+    // Send email notification
+>>>>>>> be9f6cc (Push notifications)
   };
 
   if (hasPermission === null) {
