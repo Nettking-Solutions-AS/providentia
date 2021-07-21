@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, Platform } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
-import { createPushNotification } from "../Notifications/CreatePushNotification";
+// import { createPushNotification } from "../Notifications/CreatePushNotification";
 // import sendEmail from "../Notifications/EmailNotification";
 
 const styles = StyleSheet.create({
@@ -56,42 +56,7 @@ export default function QRScanner({
     }
     setScanned(true);
     setItem(item);
-<<<<<<< HEAD
-<<<<<<< HEAD
-    createPushNotification("default", "Title", "Body", "Data");
-=======
-
-    // Send push notification
-    if (Constants.isDevice) {
-      const pushToken = await readPushToken();
-      sendPushNotification(
-        pushToken,
-        "Savnet gjenstand funnet!",
-        "En gjenstand du har satt som savnet har nå blitt funnet.",
-        true,
-        true
-      );
-    }
-
-    const email = firebase.auth().currentUser?.email;
-    const name = firebase.auth().currentUser?.displayName;
-
-    // Send email notification
-<<<<<<< HEAD
->>>>>>> be9f6cc (Push notifications)
-=======
-    sendEmail(
-      `${email}`,
-      "En av dine savnede gjenstander ble nylig funnet!",
-      `Hei ${name}! Vi anbefaler på at du betaler en dusør til den som fant gjenstanden din.`,
-      { cc: "admin@providentia.no" }
-    ).then(() => {
-      // eslint-disable-next-line no-console
-      console.log("Your message was successfully sent!");
-    });
->>>>>>> 976b3c9 (Email notifications)
-=======
->>>>>>> c3dfaeb (Temp removal)
+    // createPushNotification("default", "Title", "Body", "Data");
   };
 
   if (hasPermission === null) {
