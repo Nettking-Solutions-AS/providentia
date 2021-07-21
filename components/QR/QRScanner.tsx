@@ -6,6 +6,7 @@ import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
 import { sendPushNotification } from "../Notifications/PushNotification";
 import { readPushToken } from "../../lib/helpers";
+import EmailNotification from "../Notifications/EmailNotification";
 import sendEmail from "../Notifications/EmailNotification";
 
 const styles = StyleSheet.create({
@@ -96,7 +97,11 @@ export default function QRScanner({
     // Send push notification
 =======
 
+<<<<<<< HEAD
 >>>>>>> 0fe9c33 (Push notifications)
+=======
+    // Send push notification
+>>>>>>> 2a37a3d (Email notifications)
     if (Constants.isDevice) {
       const pushToken = await readPushToken();
       sendPushNotification(
@@ -108,10 +113,14 @@ export default function QRScanner({
       );
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2a37a3d (Email notifications)
 
     const email = firebase.auth().currentUser?.email;
     const name = firebase.auth().currentUser?.displayName;
 
+<<<<<<< HEAD
     // Send email notification
 <<<<<<< HEAD
 >>>>>>> be9f6cc (Push notifications)
@@ -132,6 +141,18 @@ export default function QRScanner({
     // Send push notification
     // Send email notification
 >>>>>>> 0fe9c33 (Push notifications)
+=======
+    // Send email notification
+    sendEmail(
+      `${email}`,
+      "En av dine savnede gjenstander ble nylig funnet!",
+      `Hei ${name}! Vi anbefaler på at du betaler en dusør til den som fant gjenstanden din.`,
+      { cc: "admin@providentia.no" }
+    ).then(() => {
+      // eslint-disable-next-line no-console
+      console.log("Your message was successfully sent!");
+    });
+>>>>>>> 2a37a3d (Email notifications)
   };
 
   if (hasPermission === null) {
