@@ -71,6 +71,17 @@ export const validateName = (name: string): Error[] => {
   return validationErrors;
 };
 
+export const validateInsurance = (insurance: string): Error[] => {
+  const validationErrors: Error[] = [];
+  if (insurance.length === 0) {
+    validationErrors.push({
+      type: "name",
+      message: "Du må skrive inn navn!",
+    });
+  }
+  return validationErrors;
+};
+
 const validDate = (da: string) =>
   /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/.test(da);
 
