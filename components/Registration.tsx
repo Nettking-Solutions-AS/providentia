@@ -7,14 +7,16 @@ import {
   FormControl,
   Input,
   Button,
+  Select,
 } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
-import { Error } from "../lib/Types.d";
+import { Error, InsuranceCompany } from "../lib/Types.d";
 import {
   validateEmail,
   validateName,
   validatePassword,
+  validateInsurance,
 } from "../lib/validation";
 
 export default function Registration() {
@@ -23,6 +25,7 @@ export default function Registration() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<Error[]>([]);
+  const [insuranceCompany, setInsuranceCompany] = useState("");
 
   const getErrorsByType = (type: string) =>
     errors.filter((e) => e.type === type);
@@ -32,6 +35,7 @@ export default function Registration() {
       ...validateEmail(email),
       ...validatePassword(password, confirmPassword),
       ...validateName(name),
+      ...validateInsurance(insuranceCompany),
     ];
 
     setErrors(validationErrors);
@@ -48,6 +52,7 @@ export default function Registration() {
             id: uid,
             email,
             name,
+            insuranceCompany,
             role: "customer",
           };
           const usersRef = firebase.firestore().collection("users");
@@ -146,6 +151,31 @@ export default function Registration() {
                 {getErrorsByType("confirmPassword").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
+            <FormControl.Label
+              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+            >
+              Forsikringsselskap
+            </FormControl.Label>
+            <Select
+              selectedValue={insuranceCompany}
+              minWidth={200}
+              accessibilityLabel="Velg hvilket forsikringsselskap du har"
+              placeholder="Velg hvilket forsikringsselskap du har"
+              onValueChange={(itemValue) =>
+                setInsuranceCompany(itemValue as InsuranceCompany)
+              }
+            >
+              <Select.Item label="Klp" value="Klp" />
+              <Select.Item label="Gjensidige" value="Gjensidige" />
+              <Select.Item label="If" value="If" />
+              <Select.Item label="Codan" value="Codan" />
+              <Select.Item label="Frende" value="Frende" />
+              <Select.Item label="Tryg" value="Tryg" />
+              <Select.Item label="Storebrand" value="Storebrand" />
+            </Select>
+            <FormControl.ErrorMessage>
+              {getErrorsByType("insuranceCompany").map((e) => e.message)}
+            </FormControl.ErrorMessage>
             <VStack space={2} mt={5}>
               <Button
                 colorScheme="cyan"

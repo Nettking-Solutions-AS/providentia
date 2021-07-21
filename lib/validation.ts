@@ -71,6 +71,17 @@ export const validateName = (name: string): Error[] => {
   return validationErrors;
 };
 
+export const validateInsurance = (insurance: string): Error[] => {
+  const validationErrors: Error[] = [];
+  if (insurance.length === 0) {
+    validationErrors.push({
+      type: "name",
+      message: "Du må skrive inn navn!",
+    });
+  }
+  return validationErrors;
+};
+
 export const validateCreateItem = (
   name: string,
   description: string,
