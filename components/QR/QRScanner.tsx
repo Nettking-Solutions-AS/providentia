@@ -91,6 +91,7 @@ export default function QRScanner({
     sendEmailNotification();
 =======
 
+    // Send push notification
     if (Constants.isDevice) {
       const pushToken = await readPushToken();
       sendPushNotification(
@@ -101,9 +102,24 @@ export default function QRScanner({
         true
       );
     }
-    // Send push notification
+
+    const email = firebase.auth().currentUser?.email;
+    const name = firebase.auth().currentUser?.displayName;
+
     // Send email notification
+<<<<<<< HEAD
 >>>>>>> be9f6cc (Push notifications)
+=======
+    sendEmail(
+      `${email}`,
+      "En av dine savnede gjenstander ble nylig funnet!",
+      `Hei ${name}! Vi anbefaler på at du betaler en dusør til den som fant gjenstanden din.`,
+      { cc: "admin@providentia.no" }
+    ).then(() => {
+      // eslint-disable-next-line no-console
+      console.log("Your message was successfully sent!");
+    });
+>>>>>>> 976b3c9 (Email notifications)
   };
 
   if (hasPermission === null) {
