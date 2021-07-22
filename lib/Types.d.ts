@@ -22,7 +22,7 @@ export type Item = {
   id: ID;
   name: string;
   description: string;
-  imageIDs: string[];
+  imageIDs: string;
   bounty: number;
   status: Status;
   lostAt?: string;

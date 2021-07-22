@@ -56,8 +56,11 @@ export default function ItemCard({
         .getDownloadURL();
       setImageURL(url);
     }
-    if (item.imageIDs.length > 0) {
+    // eslint-disable-next-line no-lone-blocks
+    {
+      /* if (item.imageIDs.length > 0) {
       fetchImageURL();
+    } */
     }
     if (isAdmin(state.currentUser)) {
       fetchOwnerNames();

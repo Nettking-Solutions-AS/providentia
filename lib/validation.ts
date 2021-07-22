@@ -77,7 +77,7 @@ const validDate = (da: string) =>
 export const validateCreateItem = (
   name: string,
   description: string,
-  images: string[],
+  images: string,
   bounty: number,
   lostAt: string | undefined,
   lostDate: string | undefined,
