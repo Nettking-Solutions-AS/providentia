@@ -90,6 +90,7 @@ export default function QRScanner({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     sendPush();
     sendEmailNotification();
 =======
@@ -153,6 +154,8 @@ export default function QRScanner({
       console.log("Your message was successfully sent!");
     });
 >>>>>>> 2a37a3d (Email notifications)
+=======
+>>>>>>> a3b8514 (Temp removal)
   };
 
   if (hasPermission === null) {
