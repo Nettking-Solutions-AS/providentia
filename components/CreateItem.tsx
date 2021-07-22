@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Box,
   Text,
   Heading,
   FormControl,
@@ -9,6 +8,7 @@ import {
   HStack,
   VStack,
   Select,
+  ScrollView,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
@@ -16,6 +16,7 @@ import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
+import firebase from "../firebase/config";
 import QRScanner from "./QR/QRScanner";
 
 export default function CreateItem({
@@ -78,21 +79,42 @@ export default function CreateItem({
 
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
-      dispatch({
-        type: "ADD_ITEM",
-        payload: {
-          id,
-          name,
-          description,
-          imageIDs: images,
-          bounty,
-          lostAt,
-          lostDate,
-          expirationDate,
-          owners,
-          status,
-        },
-      });
+      const data = {
+        name,
+        description,
+        imageIDs: images,
+        bounty,
+        lostAt,
+        lostDate,
+        expirationDate,
+        owners,
+        status,
+      };
+      const itemRef = firebase.firestore().collection("items");
+      itemRef
+        .doc(initialItem.id)
+        .set(data)
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
+        })
+        .then(() => {
+          dispatch({
+            type: "ADD_ITEM",
+            payload: {
+              id,
+              name,
+              description,
+              imageIDs: images,
+              bounty,
+              lostAt,
+              lostDate,
+              expirationDate,
+              owners,
+              status,
+            },
+          });
+        });
       resetForm();
       displayItemOverview();
     }
@@ -144,7 +166,7 @@ export default function CreateItem({
         />
       )}
       {!scanQR && (
-        <Box flex={1} p={2} w="90%" mx="auto">
+        <ScrollView flex={1} p={2} w="90%" mx="auto">
           <Heading size="lg" textAlign="center" color="primary.500">
             Ny gjenstand
           </Heading>
@@ -350,13 +372,14 @@ export default function CreateItem({
                   colorScheme="cyan"
                   _text={{ color: "white" }}
                   onPress={() => onRegister()}
+                  mb={25}
                 >
                   Opprett gjenstand
                 </Button>
               </VStack>
             </VStack>
           </VStack>
-        </Box>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
