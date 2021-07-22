@@ -27,12 +27,22 @@ export default function Profile() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View flex={1} alignItems="center">
+      <View flex={1} p={2} alignItems="center">
+        <Heading textAlign="center" color="primary.50" size="2xl" mb={150}>
+          Profil
+        </Heading>
         <Heading>{state.currentUser?.name}</Heading>
         <Heading size="md" mt={2} mb={5}>
           {state.currentUser?.email}
         </Heading>
-        <Button onPress={logout}>Logg ut</Button>
+        <Button
+          size="md"
+          colorScheme="green"
+          _text={{ color: "primary.150" }}
+          onPress={logout}
+        >
+          Logg ut
+        </Button>
       </View>
     </SafeAreaView>
   );
