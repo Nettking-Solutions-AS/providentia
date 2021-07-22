@@ -9,6 +9,7 @@ import {
   HStack,
   VStack,
   Select,
+  ScrollView,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
@@ -166,7 +167,7 @@ export default function CreateItem({
         />
       )}
       {!scanQR && (
-        <Box flex={1} p={2} w="90%" mx="auto">
+        <ScrollView flex={1} p={2} w="90%" mx="auto">
           <Heading size="lg" textAlign="center" color="primary.500">
             Ny gjenstand
           </Heading>
@@ -378,7 +379,7 @@ export default function CreateItem({
               </VStack>
             </VStack>
           </VStack>
-        </Box>
+        </ScrollView>
       )}
     </SafeAreaView>
   );
