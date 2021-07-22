@@ -373,6 +373,7 @@ export default function CreateItem({
                   colorScheme="cyan"
                   _text={{ color: "white" }}
                   onPress={() => onRegister()}
+                  mb={25}
                 >
                   Opprett gjenstand
                 </Button>
