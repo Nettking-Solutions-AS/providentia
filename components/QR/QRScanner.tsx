@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Platform } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
-import Constants from "expo-constants";
-import { sendPushNotification } from "../Notifications/PushNotification";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
 import { createPushNotification } from "../Notifications/CreatePushNotification";
@@ -59,6 +57,7 @@ export default function QRScanner({
     setScanned(true);
     setItem(item);
 <<<<<<< HEAD
+<<<<<<< HEAD
     createPushNotification("default", "Title", "Body", "Data");
 =======
 
@@ -91,6 +90,8 @@ export default function QRScanner({
       console.log("Your message was successfully sent!");
     });
 >>>>>>> 976b3c9 (Email notifications)
+=======
+>>>>>>> c3dfaeb (Temp removal)
   };
 
   if (hasPermission === null) {
