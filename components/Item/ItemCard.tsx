@@ -102,8 +102,7 @@ export default function ItemCard({
       >
         <Button
           size="md"
-          colorScheme="green"
-          _text={{ color: "primary.150" }}
+          _text={{ color: "primary.200" }}
           onPress={updateMissingStatus}
         >
           {item.status === "missing" ? "Meld funnet" : "Meld savnet"}

@@ -36,8 +36,7 @@ export default function QRGenerator({
       </Text>
       <Button
         size="md"
-        colorScheme="green"
-        _text={{ color: "primary.150" }}
+        _text={{ color: "primary.200" }}
         mb={5}
         onPress={openShareDialogAsync}
       >
