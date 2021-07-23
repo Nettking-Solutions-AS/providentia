@@ -79,7 +79,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
     <SafeAreaView style={styles.container}>
       <NativeBaseProvider>
         <Box flex={1} p={2} w="90%" mx="auto">
-          <Heading size="2xl" color="#1ed760">
+          <Heading size="2xl" color="primary.500">
             Velkommen!
           </Heading>
           <Heading color="#292929" size="md">
@@ -186,7 +186,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
             <VStack space={2} mt={5}>
               <Button
                 size="md"
-                colorScheme="green"
+                colorScheme="cyan"
                 _text={{ color: "#121212" }}
                 onPress={onRegisterPress}
               >
@@ -198,7 +198,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
                 Har du allerede bruker?{" "}
               </Text>
               <Link
-                _text={{ color: "#1ed760", bold: true, fontSize: "md" }}
+                _text={{ color: "primary.500", bold: true, fontSize: "md" }}
                 onPress={showLogin}
               >
                 Logg inn

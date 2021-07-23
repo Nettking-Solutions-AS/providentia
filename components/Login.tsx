@@ -74,7 +74,7 @@ export default function Login({
   return (
     <SafeAreaView style={styles.container}>
       <Box flex={1} p={2} w="90%" mx="auto">
-        <Heading textAlign="center" color="primary.50" size="2xl">
+        <Heading textAlign="center" color="primary.500" size="2xl">
           Providentia
         </Heading>
         <VStack space={2} mt={5}>
@@ -118,8 +118,8 @@ export default function Login({
           <VStack space={2}>
             <Button
               size="md"
-              colorScheme="green"
-              _text={{ color: "primary.150" }}
+              colorScheme="cyan"
+              _text={{ color: "primary.200" }}
               onPress={onLoginPress}
             >
               Login
@@ -130,7 +130,7 @@ export default function Login({
               Har du ikke bruker?{" "}
             </Text>
             <Link
-              _text={{ color: "primary.50", bold: true, fontSize: "md" }}
+              _text={{ color: "primary.500", bold: true, fontSize: "md" }}
               onPress={showRegistration}
             >
               Registrer deg

@@ -18,8 +18,7 @@ export default function QROverview({
       </Text>
       <Button
         size="md"
-        colorScheme="green"
-        _text={{ color: "primary.150" }}
+        _text={{ color: "primary.200" }}
         mb={15}
         mt={5}
         onPress={() => displayQRGenerator()}
@@ -29,8 +28,7 @@ export default function QROverview({
       <Text>Eller</Text>
       <Button
         size="md"
-        colorScheme="green"
-        _text={{ color: "primary.150" }}
+        _text={{ color: "primary.200" }}
         mt={15}
         onPress={openBrowser}
       >

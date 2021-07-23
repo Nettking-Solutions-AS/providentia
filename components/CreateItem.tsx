@@ -195,7 +195,7 @@ export default function CreateItem({
       )}
       {!scanQR && (
         <ScrollView flex={1} p={2} w="90%" mx="auto">
-          <Heading size="2xl" textAlign="center" color="primary.50">
+          <Heading size="2xl" textAlign="center" color="primary.500">
             Ny gjenstand
           </Heading>
 
@@ -262,8 +262,7 @@ export default function CreateItem({
                 Bilder
               </FormControl.Label>
               <Button
-                colorScheme="green"
-                _text={{ color: "primary.150" }}
+                _text={{ color: "primary.200" }}
                 onPress={pickImage}
                 mb={15}
               >
@@ -447,8 +446,7 @@ export default function CreateItem({
               <HStack mt={15} alignItems="center">
                 <Button
                   size="md"
-                  colorScheme="green"
-                  _text={{ color: "primary.150" }}
+                  _text={{ color: "primary.200" }}
                   onPress={() => setScanQR(true)}
                   mr={15}
                 >
@@ -457,11 +455,7 @@ export default function CreateItem({
                 <Text color="primary.150" fontSize="lg" mr={15}>
                   Eller
                 </Text>
-                <Button
-                  size="md"
-                  colorScheme="green"
-                  _text={{ color: "primary.150" }}
-                >
+                <Button size="md" _text={{ color: "primary.200" }}>
                   NFC
                 </Button>
               </HStack>
@@ -469,8 +463,7 @@ export default function CreateItem({
               <VStack space={2} mt={15}>
                 <Button
                   size="md"
-                  colorScheme="green"
-                  _text={{ color: "primary.150" }}
+                  _text={{ color: "primary.200" }}
                   onPress={() => onRegister()}
                   mb={25}
                 >

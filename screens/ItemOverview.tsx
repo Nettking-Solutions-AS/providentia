@@ -47,7 +47,7 @@ export default function ItemOverview({
   return (
     <SafeAreaView style={styles.container}>
       <View flex={1} p={2} alignItems="center" overflow="scroll">
-        <Heading mb={5} color="primary.50" size="2xl">
+        <Heading mb={5} size="2xl">
           {isAdmin(state.currentUser) ? "Alle gjenstander" : "Mine gjenstander"}
         </Heading>
         {scannerOpen && <QRScanner createItem={false} setItem={setItem} />}
