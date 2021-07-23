@@ -289,9 +289,10 @@ export default function CreateItem({
               </FormControl.Label>
               <Input
                 type="number"
-                value={bounty}
+                keyboardType="numeric"
                 placeholder="200 kr"
                 onChangeText={(text: string) => setBounty(Number(text))}
+                value={bounty.toString()}
               />
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
