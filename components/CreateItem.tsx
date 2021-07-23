@@ -155,8 +155,9 @@ export default function CreateItem({
       contentType: "image/jpeg",
     };
 
-    const imageName = uuidv4();
-    const ref = firebase.storage().ref().child(`items/images/${imageName}`);
+    const namet = uuidv4();
+    setImages(namet);
+    const ref = firebase.storage().ref().child(namet);
     const snapshot = await ref.put(blob, metadata);
     return snapshot.ref.getDownloadURL();
   }
@@ -171,8 +172,7 @@ export default function CreateItem({
     console.log(result);
 
     if (!result.cancelled) {
-      const uploadUrl = await uploadImageAsync(result.uri);
-      setImages(uploadUrl);
+      await uploadImageAsync(result.uri);
     }
   };
 
