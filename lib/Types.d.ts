@@ -24,7 +24,7 @@ export type User = {
   id: ID;
   name: string;
   email: string;
-  insuranceCompany: string;
+  insuranceCompany: InsuranceCompany;
   role: UserRole;
 };
 

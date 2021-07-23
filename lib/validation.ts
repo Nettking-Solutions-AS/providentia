@@ -1,4 +1,4 @@
-import { Error, Status } from "./Types";
+import { Error, InsuranceCompany, Status } from "./Types";
 
 const validEmail = (em: string) =>
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
@@ -71,12 +71,12 @@ export const validateName = (name: string): Error[] => {
   return validationErrors;
 };
 
-export const validateInsurance = (insurance: string): Error[] => {
+export const validateInsurance = (insurance: InsuranceCompany): Error[] => {
   const validationErrors: Error[] = [];
   if (insurance.length === 0) {
     validationErrors.push({
-      type: "name",
-      message: "Du må skrive inn navn!",
+      type: "insuranceCompany",
+      message: "Du må velge et forsikringsselskap!",
     });
   }
   return validationErrors;

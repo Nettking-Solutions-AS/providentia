@@ -14,12 +14,11 @@ import {
 } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
-import { Error, InsuranceCompany } from "../lib/Types.d";
+import { Error } from "../lib/Types.d";
 import {
   validateEmail,
   validateName,
   validatePassword,
-  validateInsurance,
 } from "../lib/validation";
 
 export default function Registration({ showLogin }: { showLogin: () => void }) {
@@ -28,7 +27,6 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [errors, setErrors] = useState<Error[]>([]);
-  const [insuranceCompany, setInsuranceCompany] = useState("");
 
   const getErrorsByType = (type: string) =>
     errors.filter((e) => e.type === type);
@@ -210,7 +208,9 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
               <Select.Item label="Tryg" value="Tryg" />
               <Select.Item label="Storebrand" value="Storebrand" />
             </Select>
-            <FormControl.ErrorMessage>
+            <FormControl.ErrorMessage
+              _text={{ color: "primary.250", fontSize: "md" }}
+            >
               {getErrorsByType("insuranceCompany").map((e) => e.message)}
             </FormControl.ErrorMessage>
             <VStack space={2} mt={5}>
