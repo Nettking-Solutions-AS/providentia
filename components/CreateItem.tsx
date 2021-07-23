@@ -14,7 +14,8 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
 import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
-import { v1 as uuidv1 } from "uuid";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
@@ -154,7 +155,7 @@ export default function CreateItem({
       contentType: "image/jpeg",
     };
 
-    const imageName = uuidv1();
+    const imageName = uuidv4();
     const ref = firebase.storage().ref().child(`items/images/${imageName}`);
     const snapshot = await ref.put(blob, metadata);
     return snapshot.ref.getDownloadURL();
