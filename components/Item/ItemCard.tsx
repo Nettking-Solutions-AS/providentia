@@ -50,12 +50,10 @@ export default function ItemCard({
       setOwners(users.map((user) => user.data()?.name));
     }
     async function fetchImageURL() {
-      const url = await firebase
-        .storage()
-        .ref(item.imageIDs[0])
-        .getDownloadURL();
+      const url = await firebase.storage().ref(item.imageIDs).getDownloadURL();
       setImageURL(url);
     }
+
     if (item.imageIDs.length > 0) {
       fetchImageURL();
     }

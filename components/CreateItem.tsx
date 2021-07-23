@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as React from "react";
 import {
   Text,
@@ -13,6 +14,8 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
 import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem } from "../lib/validation";
@@ -30,7 +33,7 @@ export default function CreateItem({
   const [id, setId] = useState(initialItem.id ?? "");
   const [name, setName] = useState(initialItem.name ?? "");
   const [description, setDescription] = useState(initialItem.description ?? "");
-  const [images, setImages] = useState(initialItem.imageIDs ?? []);
+  const [images, setImages] = useState(initialItem.imageIDs ?? "");
   const [bounty, setBounty] = useState<number | "">(initialItem.bounty ?? "");
   const [status, setStatus] = useState<Status>(initialItem.status ?? "");
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
@@ -47,7 +50,7 @@ export default function CreateItem({
     setId("");
     setName("");
     setDescription("");
-    setImages([]);
+    setImages("");
     setBounty("");
     setStatus("registered");
     setLostAt("");
@@ -73,7 +76,6 @@ export default function CreateItem({
       status
     );
 
-    // TODO add item to firebase
     // TODO: Backend validation (add ID after creating in backend)
     // TODO: validate that there is an ID (frontend)
 
@@ -120,31 +122,57 @@ export default function CreateItem({
     }
   };
 
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== "web") {
-        const { status: permission } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (permission !== "granted") {
-          // eslint-disable-next-line no-alert
-          alert(
-            "Beklager, vi trenger tilgang til kamerarullen for å få dette til å fungere"
-          );
-        }
+  const getPermission = async () => {
+    if (Platform.OS !== "web") {
+      const { status: permission } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission !== "granted") {
+        // eslint-disable-next-line no-alert
+        alert("Sorry, we need camera roll permissions to make this work!");
       }
-    })();
+    }
+  };
+
+  useEffect(() => {
+    getPermission();
   }, []);
+
+  async function uploadImageAsync(uri: string) {
+    const blob: any = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function onload() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function error(e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+
+    const namet = uuidv4();
+    setImages(namet);
+    const ref = firebase.storage().ref().child(namet);
+    const snapshot = await ref.put(blob, metadata);
+    return snapshot.ref.getDownloadURL();
+  }
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
     });
 
+    console.log(result);
+
     if (!result.cancelled) {
-      setImages(result.uri);
+      await uploadImageAsync(result.uri);
     }
   };
 
@@ -237,11 +265,12 @@ export default function CreateItem({
                 colorScheme="green"
                 _text={{ color: "primary.150" }}
                 onPress={pickImage}
+                mb={15}
               >
                 Velg et bilde fra kamerarullen
               </Button>
               {images?.length > 0 && (
-                <Image source={{ uri: images[0] }} width={200} height={200} />
+                <Image source={{ uri: images }} width={200} height={200} />
               )}
             </FormControl>
             <FormControl
