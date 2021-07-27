@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   NativeBaseProvider,
   Box,
@@ -13,6 +13,7 @@ import {
   Select,
 } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
+import * as Notifications from "expo-notifications";
 import firebase from "../firebase/config";
 import { InsuranceCompany, Error } from "../lib/Types.d";
 import {
@@ -20,6 +21,7 @@ import {
   validateName,
   validatePassword,
 } from "../lib/validation";
+import setPushNotification from "./Notifications/RegisterForPushNotifications";
 
 export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [email, setEmail] = useState("");
@@ -28,6 +30,12 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [name, setName] = useState("");
   const [insuranceCompany, setInsuranceCompany] = useState("");
   const [errors, setErrors] = useState<Error[]>([]);
+  const [pushToken, setPushToken] = useState("");
+
+  const getToken = async () => {
+    setPushNotification();
+    setPushToken((await Notifications.getExpoPushTokenAsync()).data);
+  };
 
   const getErrorsByType = (type: string) =>
     errors.filter((e) => e.type === type);
@@ -39,6 +47,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateName(name),
     ];
 
+    getToken();
     setErrors(validationErrors);
     if (validationErrors.length === 0) {
       firebase
@@ -53,6 +62,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
             id: uid,
             email,
             name,
+            pushToken,
             insuranceCompany,
             role: "customer",
           };
