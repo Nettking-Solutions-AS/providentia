@@ -25,6 +25,7 @@ import { validateCreateItem, validateEmail } from "../lib/validation";
 
 import QRScanner from "./QR/QRScanner";
 import firebase from "../firebase/config";
+import { isAdmin } from "../lib/helpers";
 
 export default function CreateItem({
   initialItem,
@@ -56,6 +57,10 @@ export default function CreateItem({
       : [state.currentUser?.id ?? ""]
   );
   const [ownerEmails, setOwnerEmails] = useState<string[]>([]);
+  const [visibleFor, setVisibleFor] = useState<string[]>(
+    initialItem.visibleFor ?? [state.currentUser?.insuranceCompany]
+  );
+  const [inputVisibleFor, setInputVisbleFor] = useState("");
 
   const [errors, setErrors] = useState<Error[]>([]);
 
@@ -72,6 +77,8 @@ export default function CreateItem({
     setOwners([state.currentUser?.id ?? ""]);
     setOwnerEmails([]);
     setInputOwnerEmail("");
+    setVisibleFor([state.currentUser?.insuranceCompany ?? ""]);
+    setInputVisbleFor("");
     setErrors([]);
   };
 
@@ -86,6 +93,8 @@ export default function CreateItem({
     setLostDate(initialItem.lostDate ?? "");
     setOwners(initialItem.owners);
     setInputOwnerEmail("");
+    setVisibleFor(initialItem.visibleFor);
+    setInputVisbleFor("");
     setErrors([]);
   };
 
@@ -122,6 +131,7 @@ export default function CreateItem({
           expirationDate,
           owners,
           status,
+          visibleFor,
         })
         .then(() => {
           dispatch({
@@ -137,6 +147,7 @@ export default function CreateItem({
               expirationDate,
               owners,
               status,
+              visibleFor,
             },
           });
           resetForm();
@@ -257,11 +268,58 @@ export default function CreateItem({
     }
   };
 
+  const addGroup = () => {
+    const newGroups = [...new Set([...visibleFor, inputVisibleFor])];
+    setVisibleFor(newGroups);
+    setInputVisbleFor("");
+  };
+
   const styles = StyleSheet.create({
     container: {
       flex: 1,
     },
   });
+
+  const labelToString = (label: string) => {
+    switch (label) {
+      case "registered":
+        return "Registrert";
+      case "missing":
+        return "Mistet";
+      case "found":
+        return "Funnet";
+      case "bountyPaid":
+        return "Dusør Innbetalt";
+      case "readyForShipment":
+        return "Klar for sending";
+      case "inTransit":
+        return "Under transport";
+      default:
+        return "Registrert";
+    }
+  };
+
+  const SelectElements = () => (
+    <>
+      {status !== "registered" && (
+        <Select.Item label="Registrert" value="registered" />
+      )}
+      {status !== "missing" && <Select.Item label="Mistet" value="missing" />}
+      {status !== "found" && <Select.Item label="Funnet" value="found" />}
+
+      {status !== "bountyPaid" && isAdmin(state.currentUser) && (
+        <Select.Item label="Dusør innbetalt" value="bountyPaid" />
+      )}
+
+      {status !== "readyForShipment" && isAdmin(state.currentUser) && (
+        <Select.Item label="Klar for sending" value="readyForShipment" />
+      )}
+
+      {status !== "inTransit" && isAdmin(state.currentUser) && (
+        <Select.Item label="Under transport" value="inTransit" />
+      )}
+    </>
+  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -395,21 +453,20 @@ export default function CreateItem({
                 Status
               </FormControl.Label>
               <Select
+                isDisabled={
+                  state.currentUser?.role === "customer" &&
+                  (status === "bountyPaid" ||
+                    status === "readyForShipment" ||
+                    status === "inTransit")
+                }
                 selectedValue={status}
                 minWidth={200}
                 accessibilityLabel="Velg gjenstandens status"
                 placeholder="Velg gjenstandens status"
                 onValueChange={(itemValue) => setStatus(itemValue as Status)}
               >
-                <Select.Item label="Registrert" value="registered" />
-                <Select.Item label="Mistet" value="missing" />
-                <Select.Item label="Funnet" value="found" />
-                <Select.Item label="Dusør innbetalt" value="bountyPaid" />
-                <Select.Item
-                  label="Klar for sending"
-                  value="readyForShipment"
-                />
-                <Select.Item label="Under transport" value="inTransit" />
+                <Select.Item label={labelToString(status)} value={status} />
+                {SelectElements()}
               </Select>
 
               <FormControl.ErrorMessage
@@ -530,6 +587,34 @@ export default function CreateItem({
                 {getErrorsByType("email").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
+
+            {state.currentUser?.role !== "customer" && (
+              <FormControl>
+                <FormControl.Label
+                  _text={{
+                    color: "primary.150",
+                    fontSize: "lg",
+                    fontWeight: 500,
+                  }}
+                >
+                  Grupper med tilgang
+                </FormControl.Label>
+                <HStack>
+                  <Input
+                    type="text"
+                    value={inputVisibleFor}
+                    onChangeText={(text: string) => setInputVisbleFor(text)}
+                  />
+                  <IconButton
+                    onPress={() => addGroup()}
+                    icon={<Icon size="sm" as={<AntDesign name="plus" />} />}
+                  />
+                </HStack>
+                {visibleFor.map((group) => (
+                  <Text key={group}>{group}</Text>
+                ))}
+              </FormControl>
+            )}
             <VStack space={2} alignItems="center">
               <FormControl
                 alignItems="center"

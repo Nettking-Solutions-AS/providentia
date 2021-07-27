@@ -27,6 +27,7 @@ export type User = {
   email: string;
   insuranceCompany: InsuranceCompany;
   role: UserRole;
+  groups?: string[];
 };
 
 export type Item = {
@@ -40,6 +41,7 @@ export type Item = {
   lostDate?: string;
   expirationDate: string;
   owners: ID[];
+  visibleFor: ID[];
 };
 
 export type GlobalState = {
