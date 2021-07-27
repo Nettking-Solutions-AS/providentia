@@ -14,7 +14,7 @@ import {
 } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
-import { Error } from "../lib/Types.d";
+import { InsuranceCompany, Error } from "../lib/Types.d";
 import {
   validateEmail,
   validateName,
@@ -26,6 +26,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
+  const [insuranceCompany, setInsuranceCompany] = useState("");
   const [errors, setErrors] = useState<Error[]>([]);
 
   const getErrorsByType = (type: string) =>
@@ -36,7 +37,6 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateEmail(email),
       ...validatePassword(password, confirmPassword),
       ...validateName(name),
-      ...validateInsurance(insuranceCompany),
     ];
 
     setErrors(validationErrors);
@@ -185,34 +185,41 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
               >
                 {getErrorsByType("confirmPassword").map((e) => e.message)}
               </FormControl.ErrorMessage>
+              <FormControl isRequired mt={2}>
+                <FormControl.Label
+                  _text={{
+                    color: "#121212",
+                    fontSize: "lg",
+                    fontWeight: 500,
+                  }}
+                >
+                  Forsikringsselskap
+                </FormControl.Label>
+                <Select
+                  selectedValue={insuranceCompany}
+                  minWidth={200}
+                  accessibilityLabel="Velg hvilket forsikringsselskap du har"
+                  placeholder="Velg hvilket forsikringsselskap du har"
+                  onValueChange={(itemValue) =>
+                    setInsuranceCompany(itemValue as InsuranceCompany)
+                  }
+                >
+                  <Select.Item label="Klp" value="Klp" />
+                  <Select.Item label="Gjensidige" value="Gjensidige" />
+                  <Select.Item label="If" value="If" />
+                  <Select.Item label="Codan" value="Codan" />
+                  <Select.Item label="Frende" value="Frende" />
+                  <Select.Item label="Tryg" value="Tryg" />
+                  <Select.Item label="Storebrand" value="Storebrand" />
+                  <Select.Item label="Annet" value="Annet" />
+                </Select>
+                <FormControl.ErrorMessage
+                  _text={{ color: "primary.250", fontSize: "md" }}
+                >
+                  {getErrorsByType("insuranceCompany").map((e) => e.message)}
+                </FormControl.ErrorMessage>
+              </FormControl>
             </FormControl>
-            <FormControl.Label
-              _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
-            >
-              Forsikringsselskap
-            </FormControl.Label>
-            <Select
-              selectedValue={insuranceCompany}
-              minWidth={200}
-              accessibilityLabel="Velg hvilket forsikringsselskap du har"
-              placeholder="Velg hvilket forsikringsselskap du har"
-              onValueChange={(itemValue) =>
-                setInsuranceCompany(itemValue as InsuranceCompany)
-              }
-            >
-              <Select.Item label="Klp" value="Klp" />
-              <Select.Item label="Gjensidige" value="Gjensidige" />
-              <Select.Item label="If" value="If" />
-              <Select.Item label="Codan" value="Codan" />
-              <Select.Item label="Frende" value="Frende" />
-              <Select.Item label="Tryg" value="Tryg" />
-              <Select.Item label="Storebrand" value="Storebrand" />
-            </Select>
-            <FormControl.ErrorMessage
-              _text={{ color: "primary.250", fontSize: "md" }}
-            >
-              {getErrorsByType("insuranceCompany").map((e) => e.message)}
-            </FormControl.ErrorMessage>
             <VStack space={2} mt={5}>
               <Button
                 size="md"

@@ -1,18 +1,11 @@
 import * as React from "react";
-import { useState } from "react";
 import { Button, Heading, View } from "native-base";
 import { StyleSheet, SafeAreaView } from "react-native";
 import firebase from "../firebase/config";
 import { useGlobalState } from "../components/StateManagement/GlobalState";
-import { User, InsuranceCompany, Error } from "../lib/Types.d";
-import { validateInsurance } from "../lib/validation";
 
-export default function Profile({ user }: { user: User }) {
+export default function Profile() {
   const { state, dispatch } = useGlobalState();
-  const [insuranceCompany, setInsuranceCompany] = useState<InsuranceCompany>(
-    user.insuranceCompany ?? ""
-  );
-  const [errors, setErrors] = useState<Error[]>([]);
 
   const logout = () => {
     firebase
@@ -27,23 +20,6 @@ export default function Profile({ user }: { user: User }) {
       });
   };
 
-  const getErrorsByType = (type: string) =>
-    errors.filter((e) => e.type === type);
-
-  const addInsurance = () => {
-    const validationErrors = [
-      ...validateInsurance(insuranceCompany),
-    ];
-
-    setErrors(validationErrors);
-    if (validationErrors.length === 0) {
-      const user = firebase.auth().currentUser;
-
-      user?.updateProfile({
-        insuranceCompany: setInsuranceCompany;
-      })
-    }
-
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -53,7 +29,7 @@ export default function Profile({ user }: { user: User }) {
   return (
     <SafeAreaView style={styles.container}>
       <View flex={1} p={2} alignItems="center">
-        <Heading textAlign="center" color="primary.500" size="2xl" mb={150}>
+        <Heading textAlign="center" color="primary.500" size="2xl" mb={100}>
           Profil
         </Heading>
         <Heading>{state.currentUser?.name}</Heading>
@@ -67,14 +43,6 @@ export default function Profile({ user }: { user: User }) {
           onPress={logout}
         >
           Logg ut
-        </Button>
-        <Button
-          size="md"
-          colorScheme="cyan"
-          _text={{ color: "primary.200" }}
-          onPress={addInsurance}
-        >
-          Velg forsikringsselskap
         </Button>
       </View>
     </SafeAreaView>
