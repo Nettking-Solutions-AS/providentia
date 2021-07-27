@@ -9,12 +9,24 @@ export type Status =
   | "readyForShipment"
   | "inTransit";
 
+export type InsuranceCompany =
+  | "registered"
+  | "Klp"
+  | "Gjensidige"
+  | "If"
+  | "Codan"
+  | "Frende"
+  | "Tryg"
+  | "Storebrand"
+  | "Annet";
+
 export type ID = string;
 
 export type User = {
   id: ID;
   name: string;
   email: string;
+  insuranceCompany: InsuranceCompany;
   role: UserRole;
 };
 

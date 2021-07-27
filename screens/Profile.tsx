@@ -6,6 +6,7 @@ import { useGlobalState } from "../components/StateManagement/GlobalState";
 
 export default function Profile() {
   const { state, dispatch } = useGlobalState();
+
   const logout = () => {
     firebase
       .auth()
@@ -28,7 +29,7 @@ export default function Profile() {
   return (
     <SafeAreaView style={styles.container}>
       <View flex={1} p={2} alignItems="center">
-        <Heading textAlign="center" color="primary.500" size="2xl" mb={150}>
+        <Heading textAlign="center" color="primary.500" size="2xl" mb={100}>
           Profil
         </Heading>
         <Heading>{state.currentUser?.name}</Heading>
