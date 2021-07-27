@@ -91,6 +91,7 @@ export default function QRScanner({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     sendPush();
     sendEmailNotification();
 =======
@@ -156,6 +157,10 @@ export default function QRScanner({
 >>>>>>> 2a37a3d (Email notifications)
 =======
 >>>>>>> a3b8514 (Temp removal)
+=======
+    sendPush();
+    sendEmailNotification();
+>>>>>>> d81b270 (final touches on notificationProvider)
   };
 
   if (hasPermission === null) {
