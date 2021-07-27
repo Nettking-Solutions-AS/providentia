@@ -25,6 +25,7 @@
     "@react-navigation/bottom-tabs": "5.11.2",
     "@react-navigation/native": "~5.8.10",
     "@react-navigation/stack": "~5.12.8",
+    "@sendgrid/mail": "^7.4.5",
     "@types/jest": "^26.0.23",
     "@types/react-dom": "^17.0.8",
     "@unimodules/core": "^7.1.1",
