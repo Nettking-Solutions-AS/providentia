@@ -5,7 +5,7 @@ export default async function sendEmail(
   to: string,
   subject: string,
   body: string,
-  options = {}
+  options: any = {}
 ) {
   const { cc, bcc } = options;
 
