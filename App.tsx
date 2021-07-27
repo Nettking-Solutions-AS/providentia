@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
-import React from "react";
+import React, { useEffect } from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
+import setPushNotification from "./components/Notifications/test";
 import GlobalStateProvider from "./components/StateManagement/GlobalState";
 import ScreenManager from "./components/ScreenManager";
 
@@ -18,6 +19,10 @@ export default function App() {
         green: "#16a34a",
       },
     },
+  });
+
+  useEffect(() => {
+    setPushNotification();
   });
 
   return (
