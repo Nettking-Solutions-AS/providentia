@@ -14,7 +14,6 @@ import { AntDesign } from "@expo/vector-icons";
 import { Item } from "../../lib/Types";
 import { useGlobalState } from "../StateManagement/GlobalState";
 import firebase from "../../firebase/config";
-import { isAdmin } from "../../lib/helpers";
 
 export default function ItemCard({
   item,
@@ -54,11 +53,9 @@ export default function ItemCard({
       setImageURL(url);
     }
 
+    fetchOwnerNames();
     if (item.imageIDs.length > 0) {
       fetchImageURL();
-    }
-    if (isAdmin(state.currentUser)) {
-      fetchOwnerNames();
     } else {
       setOwners([state.currentUser?.name as string]);
     }
@@ -77,7 +74,7 @@ export default function ItemCard({
     >
       <HStack alignItems="center" justifyContent="space-between">
         <Heading size="md">
-          {item.name} ({owners})
+          {item.name} ({owners?.join(", ")})
         </Heading>
         <IconButton
           icon={<Icon size="sm" as={<AntDesign name="edit" />} />}

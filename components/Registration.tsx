@@ -17,6 +17,7 @@ import firebase from "../firebase/config";
 import { InsuranceCompany, Error } from "../lib/Types.d";
 import {
   validateEmail,
+  validateInsuranceCompany,
   validateName,
   validatePassword,
 } from "../lib/validation";
@@ -26,7 +27,9 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
-  const [insuranceCompany, setInsuranceCompany] = useState("");
+  const [insuranceCompany, setInsuranceCompany] = useState<
+    InsuranceCompany | ""
+  >("");
   const [errors, setErrors] = useState<Error[]>([]);
 
   const getErrorsByType = (type: string) =>
@@ -37,6 +40,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateEmail(email),
       ...validatePassword(password, confirmPassword),
       ...validateName(name),
+      ...validateInsuranceCompany(insuranceCompany),
     ];
 
     setErrors(validationErrors);
@@ -185,7 +189,11 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
               >
                 {getErrorsByType("confirmPassword").map((e) => e.message)}
               </FormControl.ErrorMessage>
-              <FormControl isRequired mt={2}>
+              <FormControl
+                isRequired
+                isInvalid={getErrorsByType("insuranceCompany").length > 0}
+                mt={2}
+              >
                 <FormControl.Label
                   _text={{
                     color: "#121212",
@@ -214,7 +222,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
                   <Select.Item label="Annet" value="Annet" />
                 </Select>
                 <FormControl.ErrorMessage
-                  _text={{ color: "primary.250", fontSize: "md" }}
+                  _text={{ color: "#e22134", fontSize: "md" }}
                 >
                   {getErrorsByType("insuranceCompany").map((e) => e.message)}
                 </FormControl.ErrorMessage>

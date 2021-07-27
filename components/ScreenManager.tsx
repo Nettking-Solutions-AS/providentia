@@ -16,6 +16,16 @@ export default function ScreenManager() {
   const [loading, setLoading] = useState(true);
   const { state, dispatch } = useGlobalState();
 
+  const getVisibleItems = (user: User, fetchedItems: Item[]): Item[] => {
+    if (user.role === "police") {
+      return fetchedItems;
+    }
+
+    return fetchedItems.filter((item) =>
+      item.visibleFor.some((group) => user.groups?.includes(group))
+    );
+  };
+
   useEffect(() => {
     const usersRef = firebase.firestore().collection("users");
     firebase.auth().onAuthStateChanged((user) => {
@@ -37,7 +47,10 @@ export default function ScreenManager() {
                   querySnapshot.forEach((doc) => {
                     items.push({ id: doc.id, ...doc.data() } as Item);
                   });
-                  dispatch({ type: "SET_ITEMS", payload: items });
+                  dispatch({
+                    type: "SET_ITEMS",
+                    payload: getVisibleItems(userData as User, items),
+                  });
                 })
                 .catch((error) => {
                   // eslint-disable-next-line no-alert
@@ -47,7 +60,7 @@ export default function ScreenManager() {
               firebase
                 .firestore()
                 .collection("items")
-                .where("ownerIDs", "array-contains", user.uid)
+                .where("owners", "array-contains", user.uid)
                 .get()
                 .then((querySnapshot) => {
                   const items: Item[] = [];
