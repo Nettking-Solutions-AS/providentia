@@ -10,3 +10,12 @@ export default function UserRegistration() {
     <Login showRegistration={() => setShowRegistration(true)} />
   );
 }
+
+export function UserLogin() {
+  const [showLogin, setShowLogin] = useState(false);
+  return showLogin ? (
+    <Login />
+  ) : (
+    <Registration showLogin={() => setShowLogin(true)} />
+  );
+}
