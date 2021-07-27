@@ -1,7 +1,7 @@
 import "react-native-gesture-handler";
 import React, { useEffect } from "react";
 import { NativeBaseProvider, extendTheme } from "native-base";
-import setPushNotification from "./components/Notifications/test";
+import setPushNotification from "./components/Notifications/RegisterForPushNotifications";
 import GlobalStateProvider from "./components/StateManagement/GlobalState";
 import ScreenManager from "./components/ScreenManager";
 
