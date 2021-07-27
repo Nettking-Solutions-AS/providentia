@@ -10,6 +10,7 @@ import {
   VStack,
   Select,
   ScrollView,
+  Badge,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
@@ -35,7 +36,9 @@ export default function CreateItem({
   const [description, setDescription] = useState(initialItem.description ?? "");
   const [images, setImages] = useState(initialItem.imageIDs ?? "");
   const [bounty, setBounty] = useState<number | "">(initialItem.bounty ?? "");
-  const [status, setStatus] = useState<Status>(initialItem.status ?? "");
+  const [status, setStatus] = useState<Status>(
+    initialItem.status ?? "registered"
+  );
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
   const [lostDate, setLostDate] = useState(initialItem.lostDate ?? "");
   const [expirationDate, setExpirationDate] = useState(
@@ -65,6 +68,7 @@ export default function CreateItem({
 
   const onRegister = async () => {
     const validationErrorsAddItem = validateCreateItem(
+      id,
       name,
       description,
       images,
@@ -76,29 +80,22 @@ export default function CreateItem({
       status
     );
 
-    // TODO: Backend validation (add ID after creating in backend)
-    // TODO: validate that there is an ID (frontend)
-
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
-      const data = {
-        name,
-        description,
-        imageIDs: images,
-        bounty,
-        lostAt,
-        lostDate,
-        expirationDate,
-        owners,
-        status,
-      };
-      const itemRef = firebase.firestore().collection("items");
-      itemRef
-        .doc(initialItem.id)
-        .set(data)
-        .catch((error) => {
-          // eslint-disable-next-line no-alert
-          alert(error);
+      firebase
+        .firestore()
+        .collection("items")
+        .doc(id)
+        .set({
+          name,
+          description,
+          imageIDs: images,
+          bounty,
+          lostAt,
+          lostDate,
+          expirationDate,
+          owners,
+          status,
         })
         .then(() => {
           dispatch({
@@ -116,9 +113,13 @@ export default function CreateItem({
               status,
             },
           });
+          resetForm();
+          displayItemOverview();
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
         });
-      resetForm();
-      displayItemOverview();
     }
   };
 
@@ -442,23 +443,35 @@ export default function CreateItem({
               </FormControl.ErrorMessage>
             </FormControl>
             <VStack space={2} alignItems="center">
-              <Heading fontSize="lg">Knytt til ID</Heading>
-              <HStack mt={15} alignItems="center">
-                <Button
-                  size="md"
-                  _text={{ color: "primary.200" }}
-                  onPress={() => setScanQR(true)}
-                  mr={15}
-                >
-                  QR
-                </Button>
-                <Text color="primary.150" fontSize="lg" mr={15}>
-                  Eller
-                </Text>
-                <Button size="md" _text={{ color: "primary.200" }}>
-                  NFC
-                </Button>
-              </HStack>
+              <FormControl
+                alignItems="center"
+                isRequired
+                isInvalid={getErrorsByType("id").length > 0}
+              >
+                <FormControl.Label>Knytt til ID</FormControl.Label>
+                {id && (
+                  <Badge colorScheme="success" padding={2}>
+                    {id}
+                  </Badge>
+                )}
+                <HStack mt={15} alignItems="center">
+                  <Button
+                    onPress={() => setScanQR(true)}
+                    size="md"
+                    _text={{ color: "primary.200" }}
+                    mr={15}
+                  >
+                    QR
+                  </Button>
+                  <Text mr={15}>Eller</Text>
+                  <Button size="md" _text={{ color: "primary.200" }}>
+                    NFC
+                  </Button>
+                </HStack>
+                <FormControl.ErrorMessage>
+                  {getErrorsByType("id").map((e) => e.message)}
+                </FormControl.ErrorMessage>
+              </FormControl>
 
               <VStack space={2} mt={15}>
                 <Button

@@ -86,6 +86,7 @@ const validDate = (da: string) =>
   /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/.test(da);
 
 export const validateCreateItem = (
+  id: string,
   name: string,
   description: string,
   images: string,
@@ -97,6 +98,13 @@ export const validateCreateItem = (
   status: Status
 ): Error[] => {
   const validationErrorsAddItem: Error[] = [];
+  if (id.length === 0) {
+    validationErrorsAddItem.push({
+      type: "id",
+      message: "Du må registrere en unik ID",
+    });
+  }
+
   if (name.length === 0) {
     validationErrorsAddItem.push({
       type: "name",
