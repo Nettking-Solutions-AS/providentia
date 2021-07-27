@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import * as React from "react";
 import {
   Text,
@@ -56,7 +55,8 @@ export default function CreateItem({
       ? initialItem.owners
       : [state.currentUser?.id ?? ""]
   );
-  const [owmerEmails, setOwnerEmails] = useState<string[]>([]);
+  const [ownerEmails, setOwnerEmails] = useState<string[]>([]);
+
   const [errors, setErrors] = useState<Error[]>([]);
 
   const resetForm = () => {
@@ -108,17 +108,6 @@ export default function CreateItem({
 
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
-      console.log({
-        name,
-        description,
-        imageIDs: images,
-        bounty,
-        lostAt,
-        lostDate,
-        expirationDate,
-        owners,
-        status,
-      });
       firebase
         .firestore()
         .collection("items")
@@ -160,9 +149,9 @@ export default function CreateItem({
     }
   };
 
-  const getOwnerEmails = async (o: string[] = owners) => {
-    const ownerEmails = await Promise.all(
-      o.map((ownerID) =>
+  const getOwnerEmails = async (newOwners: string[] = owners) => {
+    const fetchedOwnerEmails = await Promise.all(
+      newOwners.map((ownerID) =>
         firebase
           .firestore()
           .collection("users")
@@ -171,7 +160,7 @@ export default function CreateItem({
           .then((doc) => doc.data()?.email)
       )
     );
-    setOwnerEmails(ownerEmails);
+    setOwnerEmails(fetchedOwnerEmails);
   };
 
   useEffect(() => {
@@ -202,7 +191,8 @@ export default function CreateItem({
         resolve(xhr.response);
       };
       xhr.onerror = function error(e) {
-        console.log(e);
+        // eslint-disable-next-line no-alert
+        alert(e);
         reject(new TypeError("Network request failed"));
       };
       xhr.responseType = "blob";
@@ -226,8 +216,6 @@ export default function CreateItem({
       allowsEditing: true,
       aspect: [4, 3],
     });
-
-    console.log(result);
 
     if (!result.cancelled) {
       await uploadImageAsync(result.uri);
@@ -533,7 +521,7 @@ export default function CreateItem({
                   icon={<Icon size="sm" as={<AntDesign name="plus" />} />}
                 />
               </HStack>
-              {owmerEmails.map((email) => (
+              {ownerEmails.map((email) => (
                 <Text key={email}>{email}</Text>
               ))}
               <FormControl.ErrorMessage
