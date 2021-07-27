@@ -11,17 +11,21 @@ import {
   Select,
   ScrollView,
   Badge,
+  Icon,
+  IconButton,
 } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
 import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
+import { AntDesign } from "@expo/vector-icons";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
-import { validateCreateItem } from "../lib/validation";
-import firebase from "../firebase/config";
+import { validateCreateItem, validateEmail } from "../lib/validation";
+
 import QRScanner from "./QR/QRScanner";
+import firebase from "../firebase/config";
 
 export default function CreateItem({
   initialItem,
@@ -30,6 +34,8 @@ export default function CreateItem({
   initialItem: Item;
   displayItemOverview: () => void;
 }) {
+  const { state, dispatch } = useGlobalState();
+
   const [scanQR, setScanQR] = useState(false);
   const [id, setId] = useState(initialItem.id ?? "");
   const [name, setName] = useState(initialItem.name ?? "");
@@ -44,10 +50,14 @@ export default function CreateItem({
   const [expirationDate, setExpirationDate] = useState(
     initialItem.expirationDate ?? ""
   );
-  const [owners, setOwners] = useState(initialItem.owners ?? []);
+  const [inputOwnerEmail, setInputOwnerEmail] = useState("");
+  const [owners, setOwners] = useState(
+    initialItem.owners?.length > 0
+      ? initialItem.owners
+      : [state.currentUser?.id ?? ""]
+  );
+  const [owmerEmails, setOwnerEmails] = useState<string[]>([]);
   const [errors, setErrors] = useState<Error[]>([]);
-
-  const { dispatch } = useGlobalState();
 
   const resetForm = () => {
     setId("");
@@ -59,7 +69,23 @@ export default function CreateItem({
     setLostAt("");
     setLostDate("");
     setExpirationDate("");
-    setOwners([]);
+    setOwners([state.currentUser?.id ?? ""]);
+    setOwnerEmails([]);
+    setInputOwnerEmail("");
+    setErrors([]);
+  };
+
+  const updateForm = () => {
+    setId(initialItem.id);
+    setName(initialItem.name);
+    setDescription(initialItem.description);
+    setImages(initialItem.imageIDs);
+    setBounty(initialItem.bounty);
+    setStatus(initialItem.status);
+    setLostAt(initialItem.lostAt ?? "");
+    setLostDate(initialItem.lostDate ?? "");
+    setOwners(initialItem.owners);
+    setInputOwnerEmail("");
     setErrors([]);
   };
 
@@ -82,6 +108,17 @@ export default function CreateItem({
 
     setErrors(validationErrorsAddItem);
     if (validationErrorsAddItem.length === 0) {
+      console.log({
+        name,
+        description,
+        imageIDs: images,
+        bounty,
+        lostAt,
+        lostDate,
+        expirationDate,
+        owners,
+        status,
+      });
       firebase
         .firestore()
         .collection("items")
@@ -123,20 +160,40 @@ export default function CreateItem({
     }
   };
 
-  const getPermission = async () => {
-    if (Platform.OS !== "web") {
-      const { status: permission } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (permission !== "granted") {
-        // eslint-disable-next-line no-alert
-        alert("Sorry, we need camera roll permissions to make this work!");
-      }
-    }
+  const getOwnerEmails = async (o: string[] = owners) => {
+    const ownerEmails = await Promise.all(
+      o.map((ownerID) =>
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(ownerID)
+          .get()
+          .then((doc) => doc.data()?.email)
+      )
+    );
+    setOwnerEmails(ownerEmails);
   };
 
   useEffect(() => {
-    getPermission();
-  }, []);
+    if (initialItem.name) {
+      updateForm();
+    } else {
+      resetForm();
+    }
+    (async () => {
+      if (Platform.OS !== "web") {
+        const { status: permission } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (permission !== "granted") {
+          // eslint-disable-next-line no-alert
+          alert(
+            "Beklager, vi trenger tilgang til kamerarullen for å få dette til å fungere"
+          );
+        }
+      }
+      getOwnerEmails();
+    })();
+  }, [initialItem]);
 
   async function uploadImageAsync(uri: string) {
     const blob: any = await new Promise((resolve, reject) => {
@@ -174,6 +231,41 @@ export default function CreateItem({
 
     if (!result.cancelled) {
       await uploadImageAsync(result.uri);
+    }
+  };
+
+  const addOwner = () => {
+    const validationErrors = validateEmail(inputOwnerEmail);
+    setErrors(validationErrors);
+    if (validationErrors.length === 0) {
+      firebase
+        .firestore()
+        .collection("users")
+        .where("email", "==", inputOwnerEmail)
+        .get()
+        .then((querySnapshot) => {
+          let userID;
+          querySnapshot.forEach((doc) => {
+            userID = doc.id;
+          });
+          if (userID) {
+            setInputOwnerEmail("");
+            const newOwners = [...new Set([...owners, userID])];
+            setOwners(newOwners);
+            getOwnerEmails(newOwners);
+          } else {
+            setErrors([
+              {
+                type: "email",
+                message: "Fant ingen bruker med denne epost-adressen!",
+              },
+            ]);
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-alert
+          alert(error);
+        });
     }
   };
 
@@ -292,7 +384,7 @@ export default function CreateItem({
                 keyboardType="numeric"
                 placeholder="200 kr"
                 onChangeText={(text: string) => setBounty(Number(text))}
-                value={bounty.toString()}
+                value={bounty?.toString()}
               />
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
@@ -430,12 +522,20 @@ export default function CreateItem({
               >
                 Brukere med tilgang
               </FormControl.Label>
-              <Input
-                type="email"
-                value={owners}
-                placeholder="kari@nordmann.no"
-                onChangeText={(text: string) => setOwners([text])}
-              />
+              <HStack>
+                <Input
+                  type="email"
+                  value={inputOwnerEmail}
+                  onChangeText={(text: string) => setInputOwnerEmail(text)}
+                />
+                <IconButton
+                  onPress={() => addOwner()}
+                  icon={<Icon size="sm" as={<AntDesign name="plus" />} />}
+                />
+              </HStack>
+              {owmerEmails.map((email) => (
+                <Text key={email}>{email}</Text>
+              ))}
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
               >
