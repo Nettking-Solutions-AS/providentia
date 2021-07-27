@@ -10,7 +10,6 @@ export type Status =
   | "inTransit";
 
 export type InsuranceCompany =
-  | "registered"
   | "Klp"
   | "Gjensidige"
   | "If"

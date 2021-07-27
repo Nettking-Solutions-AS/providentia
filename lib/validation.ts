@@ -71,9 +71,11 @@ export const validateName = (name: string): Error[] => {
   return validationErrors;
 };
 
-export const validateInsurance = (insurance: InsuranceCompany): Error[] => {
+export const validateInsuranceCompany = (
+  insuranceCompany: InsuranceCompany | ""
+) => {
   const validationErrors: Error[] = [];
-  if (insurance.length === 0) {
+  if (insuranceCompany.length === 0) {
     validationErrors.push({
       type: "insuranceCompany",
       message: "Du må velge et forsikringsselskap!",
