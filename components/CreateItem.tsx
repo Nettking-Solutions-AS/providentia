@@ -636,16 +636,11 @@ export default function CreateItem({
                   >
                     QR
                   </Button>
-                  <Text mr={15}>Eller</Text>
-                  <Button size="md" _text={{ color: "primary.200" }}>
-                    NFC
-                  </Button>
                 </HStack>
                 <FormControl.ErrorMessage>
                   {getErrorsByType("id").map((e) => e.message)}
                 </FormControl.ErrorMessage>
               </FormControl>
-
               <VStack space={2} mt={15}>
                 <Button
                   size="md"
