@@ -1,5 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-console */
 import React, { useState, useRef, useEffect } from "react";
 import {
   NativeBaseProvider,
@@ -26,7 +24,6 @@ import {
   validateName,
   validatePassword,
 } from "../lib/validation";
-import setPushNotification from "./Notifications/RegisterForPushNotifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -61,14 +58,9 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
         finalStatus = status;
       }
       if (finalStatus !== "granted") {
-        alert("Failed to get push token for push notification!");
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      // eslint-disable-next-line no-console
-      console.log(token);
-    } else {
-      alert("Must use physical device for Push Notifications");
     }
 
     if (Platform.OS === "android") {
@@ -85,7 +77,6 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
-      console.log("token", token);
       setExpoPushToken(token);
     });
 
@@ -96,9 +87,8 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
-      });
+      // eslint-disable-next-line no-unused-vars
+      Notifications.addNotificationResponseReceivedListener((response) => {});
 
     return () => {
       if (notificationListener.current) {
@@ -123,7 +113,6 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateInsuranceCompany(insuranceCompany),
     ];
 
-    getToken();
     setErrors(validationErrors);
     if (validationErrors.length === 0) {
       firebase
