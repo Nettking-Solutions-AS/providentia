@@ -3,8 +3,6 @@ import { Text, View, StyleSheet, Platform } from "react-native";
 import { BarCodeScanner, BarCodeScannerResult } from "expo-barcode-scanner";
 import firebase from "../../firebase/config";
 import { Item } from "../../lib/Types";
-// import { createPushNotification } from "../Notifications/CreatePushNotification";
-// import sendEmail from "../Notifications/EmailNotification";
 
 const styles = StyleSheet.create({
   container: {
@@ -56,7 +54,6 @@ export default function QRScanner({
     }
     setScanned(true);
     setItem(item);
-    // createPushNotification("default", "Title", "Body", "Data");
   };
 
   if (hasPermission === null) {
