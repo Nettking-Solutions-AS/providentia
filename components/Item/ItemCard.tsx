@@ -14,6 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Item } from "../../lib/Types";
 import { useGlobalState } from "../StateManagement/GlobalState";
 import firebase from "../../firebase/config";
+import sendPushNotification from "../Notifications/CreatePushNotification";
 
 export default function ItemCard({
   item,
@@ -26,6 +27,7 @@ export default function ItemCard({
   const { state, dispatch } = useGlobalState();
   const [owners, setOwners] = useState<string[]>();
   const [imageURL, setImageURL] = useState<string>();
+  const [expoPushToken, setExpoPushToken] = useState<any>();
   const updateMissingStatus = () => {
     firebase
       .firestore()
@@ -34,8 +36,12 @@ export default function ItemCard({
       .update({
         status: item.status === "missing" ? "found" : "missing",
       })
-      .then(() => {
+      .then(async () => {
         dispatch({ type: "TOGGLE_MISSING", payload: { id: item.id } });
+
+        if (item.status === "missing") {
+          await sendPushNotification(expoPushToken);
+        }
       });
   };
 
@@ -48,12 +54,23 @@ export default function ItemCard({
 
       setOwners(users.map((user) => user.data()?.name));
     }
+
+    async function fetchExpoPushToken() {
+      const itemOwnerId = item.owners.map((owner) =>
+        firebase.firestore().collection("users").doc(owner).get()
+      );
+      const userID = await Promise.all(itemOwnerId);
+
+      setExpoPushToken(userID.map((user) => user.data()?.expoPushToken));
+    }
+
     async function fetchImageURL() {
       const url = await firebase.storage().ref(item.imageIDs).getDownloadURL();
       setImageURL(url);
     }
 
     fetchOwnerNames();
+    fetchExpoPushToken();
     if (item.imageIDs.length > 0) {
       fetchImageURL();
     } else {

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+/* eslint-disable no-alert */
+/* eslint-disable no-console */
+import React, { useState, useRef, useEffect } from "react";
 import {
   NativeBaseProvider,
   Box,
@@ -12,8 +14,10 @@ import {
   Link,
   Select,
 } from "native-base";
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
+import { Subscription } from "@unimodules/core";
+import Constants from "expo-constants";
 import firebase from "../firebase/config";
 import { InsuranceCompany, Error } from "../lib/Types.d";
 import {
@@ -22,7 +26,14 @@ import {
   validateName,
   validatePassword,
 } from "../lib/validation";
-import setPushNotification from "./Notifications/RegisterForPushNotifications";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [email, setEmail] = useState("");
@@ -33,12 +44,72 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
     InsuranceCompany | ""
   >("");
   const [errors, setErrors] = useState<Error[]>([]);
-  const [pushToken, setPushToken] = useState("");
+  const [expoPushToken, setExpoPushToken] = useState<any>("");
+  const [notification, setNotification] = useState<any>(false);
+  const notificationListener = useRef<Subscription>();
+  const responseListener = useRef<Subscription>();
 
-  const getToken = async () => {
-    setPushNotification();
-    setPushToken((await Notifications.getExpoPushTokenAsync()).data);
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      // eslint-disable-next-line no-console
+      console.log(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+    // eslint-disable-next-line consistent-return
+    return token;
   };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => {
+      console.log("token", token);
+      setExpoPushToken(token);
+    });
+
+    notificationListener.current =
+      // eslint-disable-next-line no-shadow
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   const getErrorsByType = (type: string) =>
     errors.filter((e) => e.type === type);
@@ -51,7 +122,6 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateInsuranceCompany(insuranceCompany),
     ];
 
-    getToken();
     setErrors(validationErrors);
     if (validationErrors.length === 0) {
       firebase
@@ -66,7 +136,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
             id: uid,
             email,
             name,
-            pushToken,
+            expoPushToken,
             insuranceCompany,
             role: "customer",
           };
