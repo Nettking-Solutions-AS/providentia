@@ -27,6 +27,7 @@ export type User = {
   email: string;
   insuranceCompany: InsuranceCompany;
   role: UserRole;
+  pushToken: string;
   groups?: string[];
 };
 

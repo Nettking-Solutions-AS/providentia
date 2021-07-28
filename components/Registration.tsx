@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   NativeBaseProvider,
   Box,
@@ -12,7 +12,10 @@ import {
   Link,
   Select,
 } from "native-base";
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, Platform } from "react-native";
+import * as Notifications from "expo-notifications";
+import { Subscription } from "@unimodules/core";
+import Constants from "expo-constants";
 import firebase from "../firebase/config";
 import { InsuranceCompany, Error } from "../lib/Types.d";
 import {
@@ -21,6 +24,14 @@ import {
   validateName,
   validatePassword,
 } from "../lib/validation";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
 
 export default function Registration({ showLogin }: { showLogin: () => void }) {
   const [email, setEmail] = useState("");
@@ -31,6 +42,65 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
     InsuranceCompany | ""
   >("");
   const [errors, setErrors] = useState<Error[]>([]);
+  const [expoPushToken, setExpoPushToken] = useState<any>("");
+  const setNotification = useState<any>(false);
+  const notificationListener = useRef<Subscription>();
+  const responseListener = useRef<Subscription>();
+
+  const registerForPushNotificationsAsync = async () => {
+    let token;
+    if (Constants.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
+    if (Platform.OS === "android") {
+      Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+    // eslint-disable-next-line consistent-return
+    return token;
+  };
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+    });
+
+    notificationListener.current =
+      // eslint-disable-next-line no-shadow
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      // eslint-disable-next-line no-unused-vars
+      Notifications.addNotificationResponseReceivedListener((response) => {});
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   const getErrorsByType = (type: string) =>
     errors.filter((e) => e.type === type);
@@ -57,6 +127,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
             id: uid,
             email,
             name,
+            expoPushToken,
             insuranceCompany,
             role: "customer",
           };
