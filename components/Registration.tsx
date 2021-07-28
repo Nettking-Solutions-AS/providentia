@@ -43,7 +43,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   >("");
   const [errors, setErrors] = useState<Error[]>([]);
   const [expoPushToken, setExpoPushToken] = useState<any>("");
-  const setNotification = useState<any>(false);
+  const [setNotification] = useState<any>(false);
   const notificationListener = useRef<Subscription>();
   const responseListener = useRef<Subscription>();
 
