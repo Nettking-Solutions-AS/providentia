@@ -26,6 +26,7 @@ import {
   validateName,
   validatePassword,
 } from "../lib/validation";
+import setPushNotification from "./Notifications/RegisterForPushNotifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -122,6 +123,7 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
       ...validateInsuranceCompany(insuranceCompany),
     ];
 
+    getToken();
     setErrors(validationErrors);
     if (validationErrors.length === 0) {
       firebase
