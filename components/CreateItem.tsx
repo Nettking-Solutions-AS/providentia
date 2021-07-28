@@ -570,6 +570,7 @@ export default function CreateItem({
               <HStack>
                 <Input
                   type="email"
+                  width="90%"
                   value={inputOwnerEmail}
                   onChangeText={(text: string) => setInputOwnerEmail(text)}
                 />
@@ -579,7 +580,9 @@ export default function CreateItem({
                 />
               </HStack>
               {ownerEmails.map((email) => (
-                <Text key={email}>{email}</Text>
+                <Text key={email} mt={3}>
+                  {email}
+                </Text>
               ))}
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
@@ -603,6 +606,7 @@ export default function CreateItem({
                   <Input
                     type="text"
                     value={inputVisibleFor}
+                    width="90%"
                     onChangeText={(text: string) => setInputVisbleFor(text)}
                   />
                   <IconButton
@@ -611,7 +615,9 @@ export default function CreateItem({
                   />
                 </HStack>
                 {visibleFor.map((group) => (
-                  <Text key={group}>{group}</Text>
+                  <Text key={group} mt={3}>
+                    {group}
+                  </Text>
                 ))}
               </FormControl>
             )}
@@ -621,7 +627,15 @@ export default function CreateItem({
                 isRequired
                 isInvalid={getErrorsByType("id").length > 0}
               >
-                <FormControl.Label>Knytt til ID</FormControl.Label>
+                <FormControl.Label
+                  _text={{
+                    color: "primary.150",
+                    fontSize: "lg",
+                    fontWeight: 500,
+                  }}
+                >
+                  Knytt til ID
+                </FormControl.Label>
                 {id && (
                   <Badge colorScheme="success" padding={2}>
                     {id}
@@ -636,22 +650,17 @@ export default function CreateItem({
                   >
                     QR
                   </Button>
-                  <Text mr={15}>Eller</Text>
-                  <Button size="md" _text={{ color: "primary.200" }}>
-                    NFC
-                  </Button>
                 </HStack>
                 <FormControl.ErrorMessage>
                   {getErrorsByType("id").map((e) => e.message)}
                 </FormControl.ErrorMessage>
               </FormControl>
-
               <VStack space={2} mt={15}>
                 <Button
                   size="md"
                   _text={{ color: "primary.200" }}
                   onPress={() => onRegister()}
-                  mb={25}
+                  mb={200}
                 >
                   Opprett gjenstand
                 </Button>
