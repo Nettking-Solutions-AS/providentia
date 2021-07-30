@@ -84,7 +84,7 @@ export default function ItemCard({
       shadow={2}
       rounded="lg"
       maxWidth="90%"
-      width="75%"
+      width="85%"
       padding={5}
       paddingTop={2}
       mb={5}
