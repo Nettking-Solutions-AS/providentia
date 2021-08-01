@@ -56,16 +56,17 @@ export default function QRScanner({
     setItem(item);
   };
 
+  if (Platform.OS === "web" && !scanned) {
+    // eslint-disable-next-line no-alert
+    const id = prompt("Skriv inn scannet ID");
+    handleBarCodeScanned({ data: `/${id}`, type: "256" });
+  }
+
   if (hasPermission === null) {
     return <Text>Forespør kamera-tilgang...</Text>;
   }
 
   if (!hasPermission) {
-    if (Platform.OS === "web" && !scanned) {
-      // eslint-disable-next-line no-alert
-      const id = prompt("Skriv inn scannet ID");
-      handleBarCodeScanned({ data: `/${id}`, type: "256" });
-    }
     return <Text>Ingen tilgang til kamera</Text>;
   }
 

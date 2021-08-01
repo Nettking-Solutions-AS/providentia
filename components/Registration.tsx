@@ -76,30 +76,35 @@ export default function Registration({ showLogin }: { showLogin: () => void }) {
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
-    });
-
-    notificationListener.current =
-      // eslint-disable-next-line no-shadow
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification);
+    if (Platform.OS !== "web") {
+      registerForPushNotificationsAsync().then((token) => {
+        setExpoPushToken(token);
       });
 
-    responseListener.current =
-      // eslint-disable-next-line no-unused-vars
-      Notifications.addNotificationResponseReceivedListener((response) => {});
+      notificationListener.current =
+        // eslint-disable-next-line no-shadow
+        Notifications.addNotificationReceivedListener((notification) => {
+          setNotification(notification);
+        });
 
-    return () => {
-      if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(
-          notificationListener.current
-        );
-      }
-      if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
-      }
-    };
+      responseListener.current =
+        // eslint-disable-next-line no-unused-vars
+        Notifications.addNotificationResponseReceivedListener((response) => {});
+
+      return () => {
+        if (notificationListener.current) {
+          Notifications.removeNotificationSubscription(
+            notificationListener.current
+          );
+        }
+        if (responseListener.current) {
+          Notifications.removeNotificationSubscription(
+            responseListener.current
+          );
+        }
+      };
+    }
+    return null;
   }, []);
 
   const getErrorsByType = (type: string) =>
