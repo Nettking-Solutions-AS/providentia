@@ -19,6 +19,8 @@ export type InsuranceCompany =
   | "Storebrand"
   | "Annet";
 
+export type ExpirationDate = "OneYear" | "TwoYears" | "ThreeYears";
+
 export type ID = string;
 
 export type User = {
