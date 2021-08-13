@@ -47,9 +47,8 @@ export default function CreateItem({
   );
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
   const [lostDate, setLostDate] = useState(initialItem.lostDate ?? "");
-  const [expiration, setExpiration] = useState<ExpirationDate>("TwoYears");
   const [expirationDate, setExpirationDate] = useState(
-    initialItem.expirationDate ?? ""
+    initialItem.expirationDate ?? "1"
   );
   const [inputOwnerEmail, setInputOwnerEmail] = useState("");
   const [owners, setOwners] = useState(
@@ -74,7 +73,7 @@ export default function CreateItem({
     setStatus("registered");
     setLostAt("");
     setLostDate("");
-    setExpirationDate("OneYear");
+    setExpirationDate("");
     setOwners([state.currentUser?.id ?? ""]);
     setOwnerEmails([]);
     setInputOwnerEmail("");
@@ -92,6 +91,7 @@ export default function CreateItem({
     setStatus(initialItem.status);
     setLostAt(initialItem.lostAt ?? "");
     setLostDate(initialItem.lostDate ?? "");
+    setExpirationDate(initialItem.expirationDate);
     setOwners(initialItem.owners);
     setInputOwnerEmail("");
     setVisibleFor(initialItem.visibleFor);
@@ -161,23 +161,6 @@ export default function CreateItem({
     }
   };
 
-  const getExpirationDate = () => {
-    const today = new Date();
-    const day = `0${today.getDate()}`.slice(-2);
-    const month = `0${today.getMonth() + 1}`.slice(-2);
-    const year1 = today.getFullYear() + 1;
-    const year2 = today.getFullYear() + 2;
-    const year3 = today.getFullYear() + 3;
-
-    if (expiration === "OneYear") {
-      setExpirationDate(`${day}/${month}/${year1}`);
-    } else if (expiration === "TwoYears") {
-      setExpirationDate(`${day}/${month}/${year2}`);
-    } else {
-      setExpirationDate(`${day}/${month}/${year3}`);
-    }
-  };
-
   const getOwnerEmails = async (newOwners: string[] = owners) => {
     const fetchedOwnerEmails = await Promise.all(
       newOwners.map((ownerID) =>
@@ -210,7 +193,6 @@ export default function CreateItem({
         }
       }
       getOwnerEmails();
-      getExpirationDate();
     })();
   }, [initialItem]);
 
@@ -339,6 +321,31 @@ export default function CreateItem({
       )}
     </>
   );
+
+  const labelToStringExpiration = (label: string) => {
+    switch (label) {
+      case "1":
+        return "Ett år";
+      case "2":
+        return "To år";
+      case "3":
+        return "Tre år";
+      default:
+        return "Tre år";
+    }
+  };
+
+  const SelectElementsExpiration = () => (
+    <>
+      {expirationDate !== "1" && <Select.Item label="Ett år" value="1" />}
+      {expirationDate !== "2" && <Select.Item label="To år" value="2" />}
+      {expirationDate !== "3" && <Select.Item label="Tre år" value="3" />}
+    </>
+  );
+
+  const today = new Date();
+  const day = `0${today.getDate()}`.slice(-2);
+  const month = `0${today.getMonth() + 1}`.slice(-2);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -551,7 +558,6 @@ export default function CreateItem({
               </>
             )}
 
-
             <FormControl
               isRequired
               isInvalid={getErrorsByType("expirationDate").length > 0}
@@ -567,17 +573,25 @@ export default function CreateItem({
                 Varighet
               </FormControl.Label>
               <Select
-                selectedValue={expiration}
+                selectedValue={expirationDate}
                 minWidth={200}
                 accessibilityLabel="Velg gjenstandens varighet"
                 placeholder="Velg gjenstandens varighet"
                 onValueChange={(itemValue) =>
-                  setExpiration(itemValue as ExpirationDate)
+                  // setExpirationDate(itemValue as ExpirationDate)
+                  setExpirationDate(
+                    `${day}/${month}/${
+                      // eslint-disable-next-line radix
+                      today.getFullYear() + parseInt(itemValue)
+                    }`
+                  )
                 }
               >
-                <Select.Item label="Ett år" value="OneYear" />
-                <Select.Item label="To år" value="TwoYears" />
-                <Select.Item label="Tre år" value="ThreeYears" />
+                <Select.Item
+                  label={labelToStringExpiration(expirationDate)}
+                  value={expirationDate}
+                />
+                {SelectElementsExpiration()}
               </Select>
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
@@ -585,43 +599,6 @@ export default function CreateItem({
                 {getErrorsByType("expirationDate").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
-
-
-
-
-
-
-            <FormControl
-              isRequired
-              isInvalid={getErrorsByType("expirationDate").length > 0}
-              mb={5}
-            >
-              <FormControl.Label
-                _text={{
-                  color: "primary.150",
-                  fontSize: "lg",
-                  fontWeight: 500,
-                }}
-              >
-                Varighet
-              </FormControl.Label>
-              <Input
-                type="text"
-                value={expirationDate}
-                placeholder="20.12.2021"
-                onChangeText={(text: string) => setExpirationDate(text)}
-              />
-              <FormControl.ErrorMessage
-                _text={{ color: "primary.250", fontSize: "md" }}
-              >
-                {getErrorsByType("expirationDate").map((e) => e.message)}
-              </FormControl.ErrorMessage>
-            </FormControl>
-
-
-
-
-
 
             <FormControl isInvalid={getErrorsByType("email").length > 0}>
               <FormControl.Label
