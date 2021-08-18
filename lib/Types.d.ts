@@ -41,7 +41,7 @@ export type Item = {
   bounty: number;
   status: Status;
   lostAt?: string;
-  lostDate?: string;
+  lostDate?: any;
   expirationDate: any;
   owners: ID[];
   visibleFor: ID[];

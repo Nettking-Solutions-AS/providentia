@@ -69,21 +69,37 @@ export default function CreateItem({
   const [inputVisibleFor, setInputVisbleFor] = useState("");
 
   const [, setMode] = useState("date");
-  const [show, setShow] = useState(false);
+  const [showExpirationPicker, setShowExpirationPicker] = useState(false);
+  const [showLostPicker, setShowLostPicker] = useState(false);
 
-  const onChange = (event: any, selectedDate: any) => {
+  const onChangeExpiration = (event: any, selectedDate: any) => {
     const currentDate = selectedDate || expirationDate;
-    setShow(Platform.OS === "ios");
+    setShowExpirationPicker(Platform.OS === "ios");
     setExpirationDate(currentDate);
   };
 
-  const showMode = (currentMode: React.SetStateAction<string>) => {
-    setShow(true);
+  const onChangeLostDate = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || lostDate;
+    setShowLostPicker(Platform.OS === "ios");
+    setLostDate(currentDate);
+  };
+
+  const showModeExpiration = (currentMode: React.SetStateAction<string>) => {
+    setShowExpirationPicker(true);
     setMode(currentMode);
   };
 
-  const showDatepicker = () => {
-    showMode("date");
+  const showModeLostDate = (currentMode: React.SetStateAction<string>) => {
+    setShowLostPicker(true);
+    setMode(currentMode);
+  };
+
+  const showExpiration = () => {
+    showModeExpiration("date");
+  };
+
+  const showLostDate = () => {
+    showModeLostDate("date");
   };
 
   const [errors, setErrors] = useState<Error[]>([]);
@@ -96,7 +112,13 @@ export default function CreateItem({
     setBounty("");
     setStatus("registered");
     setLostAt("");
-    setLostDate("");
+    setLostDate(
+      new Date(
+        new Date().getFullYear(),
+        new Date().getMonth() + 1,
+        new Date().getDate()
+      )
+    );
     setExpirationDate(
       new Date(
         new Date().getFullYear() + 3,
@@ -548,12 +570,17 @@ export default function CreateItem({
                   >
                     Når ble gjenstanden mistet?
                   </FormControl.Label>
-                  <Input
-                    type="text"
-                    value={lostDate}
-                    placeholder="20.01.2021"
-                    onChangeText={(text: string) => setLostDate(text)}
-                  />
+                  <Button onPress={showLostDate} mb={5}>
+                    Sett mistet dato!
+                  </Button>
+                  {showLostPicker && (
+                    <DateTimePicker
+                      testID="datetimepicker"
+                      value={lostDate}
+                      display="default"
+                      onChange={onChangeLostDate}
+                    />
+                  )}
                   <FormControl.ErrorMessage
                     _text={{ color: "primary.250", fontSize: "md" }}
                   >
@@ -577,15 +604,15 @@ export default function CreateItem({
               >
                 Varighet
               </FormControl.Label>
-              <Button onPress={showDatepicker} mb={5}>
+              <Button onPress={showExpiration} mb={5}>
                 Sett utløpsdato!
               </Button>
-              {show && (
+              {showExpirationPicker && (
                 <DateTimePicker
                   testID="datetimepicker"
                   value={expirationDate}
                   display="default"
-                  onChange={onChange}
+                  onChange={onChangeExpiration}
                 />
               )}
               <FormControl.ErrorMessage

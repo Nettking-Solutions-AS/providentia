@@ -148,11 +148,6 @@ export const validateCreateItem = (
         type: "lostDate",
         message: "Du må skrive inn dato for når du mistet gjenstanden!",
       });
-    } else if (!validDate(lostDate)) {
-      validationErrorsAddItem.push({
-        type: "lostDate",
-        message: "Ugyldig dato!",
-      });
     }
   }
 
