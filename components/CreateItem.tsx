@@ -68,7 +68,7 @@ export default function CreateItem({
   );
   const [inputVisibleFor, setInputVisbleFor] = useState("");
 
-  const [mode, setMode] = useState("date");
+  const [, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
   const onChange = (event: any, selectedDate: any) => {
