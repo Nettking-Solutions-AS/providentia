@@ -19,7 +19,8 @@ import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { AntDesign } from "@expo/vector-icons";
-import { Error, Item, Status, ExpirationDate } from "../lib/Types";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem, validateEmail } from "../lib/validation";
 
@@ -48,7 +49,12 @@ export default function CreateItem({
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
   const [lostDate, setLostDate] = useState(initialItem.lostDate ?? "");
   const [expirationDate, setExpirationDate] = useState(
-    initialItem.expirationDate ?? "1"
+    initialItem.expirationDate ??
+      new Date(
+        new Date().getFullYear() + 3,
+        new Date().getMonth() + 1,
+        new Date().getDate()
+      )
   );
   const [inputOwnerEmail, setInputOwnerEmail] = useState("");
   const [owners, setOwners] = useState(
@@ -62,6 +68,24 @@ export default function CreateItem({
   );
   const [inputVisibleFor, setInputVisbleFor] = useState("");
 
+  const [mode, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || expirationDate;
+    setShow(Platform.OS === "ios");
+    setExpirationDate(currentDate);
+  };
+
+  const showMode = (currentMode: React.SetStateAction<string>) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
   const [errors, setErrors] = useState<Error[]>([]);
 
   const resetForm = () => {
@@ -73,7 +97,13 @@ export default function CreateItem({
     setStatus("registered");
     setLostAt("");
     setLostDate("");
-    setExpirationDate("");
+    setExpirationDate(
+      new Date(
+        new Date().getFullYear() + 3,
+        new Date().getMonth() + 1,
+        new Date().getDate()
+      )
+    );
     setOwners([state.currentUser?.id ?? ""]);
     setOwnerEmails([]);
     setInputOwnerEmail("");
@@ -322,31 +352,6 @@ export default function CreateItem({
     </>
   );
 
-  const labelToStringExpiration = (label: string) => {
-    switch (label) {
-      case "1":
-        return "Ett år";
-      case "2":
-        return "To år";
-      case "3":
-        return "Tre år";
-      default:
-        return "Tre år";
-    }
-  };
-
-  const SelectElementsExpiration = () => (
-    <>
-      {expirationDate !== "1" && <Select.Item label="Ett år" value="1" />}
-      {expirationDate !== "2" && <Select.Item label="To år" value="2" />}
-      {expirationDate !== "3" && <Select.Item label="Tre år" value="3" />}
-    </>
-  );
-
-  const today = new Date();
-  const day = `0${today.getDate()}`.slice(-2);
-  const month = `0${today.getMonth() + 1}`.slice(-2);
-
   return (
     <SafeAreaView style={styles.container}>
       {scanQR && (
@@ -572,27 +577,17 @@ export default function CreateItem({
               >
                 Varighet
               </FormControl.Label>
-              <Select
-                selectedValue={expirationDate}
-                minWidth={200}
-                accessibilityLabel="Velg gjenstandens varighet"
-                placeholder="Velg gjenstandens varighet"
-                onValueChange={(itemValue) =>
-                  // setExpirationDate(itemValue as ExpirationDate)
-                  setExpirationDate(
-                    `${day}/${month}/${
-                      // eslint-disable-next-line radix
-                      today.getFullYear() + parseInt(itemValue)
-                    }`
-                  )
-                }
-              >
-                <Select.Item
-                  label={labelToStringExpiration(expirationDate)}
+              <Button onPress={showDatepicker} mb={5}>
+                Sett utløpsdato!
+              </Button>
+              {show && (
+                <DateTimePicker
+                  testID="datetimepicker"
                   value={expirationDate}
+                  display="default"
+                  onChange={onChange}
                 />
-                {SelectElementsExpiration()}
-              </Select>
+              )}
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
               >

@@ -42,7 +42,7 @@ export type Item = {
   status: Status;
   lostAt?: string;
   lostDate?: string;
-  expirationDate: string;
+  expirationDate: any;
   owners: ID[];
   visibleFor: ID[];
 };
