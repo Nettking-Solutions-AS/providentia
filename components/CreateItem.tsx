@@ -19,6 +19,7 @@ import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { AntDesign } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem, validateEmail } from "../lib/validation";
@@ -48,7 +49,12 @@ export default function CreateItem({
   const [lostAt, setLostAt] = useState(initialItem.lostAt ?? "");
   const [lostDate, setLostDate] = useState(initialItem.lostDate ?? "");
   const [expirationDate, setExpirationDate] = useState(
-    initialItem.expirationDate ?? ""
+    initialItem.expirationDate ??
+      new Date(
+        new Date().getFullYear() + 3,
+        new Date().getMonth() + 1,
+        new Date().getDate()
+      )
   );
   const [inputOwnerEmail, setInputOwnerEmail] = useState("");
   const [owners, setOwners] = useState(
@@ -62,6 +68,24 @@ export default function CreateItem({
   );
   const [inputVisibleFor, setInputVisbleFor] = useState("");
 
+  const [, setMode] = useState("date");
+  const [show, setShow] = useState(false);
+
+  const onChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate || expirationDate;
+    setShow(Platform.OS === "ios");
+    setExpirationDate(currentDate);
+  };
+
+  const showMode = (currentMode: React.SetStateAction<string>) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode("date");
+  };
+
   const [errors, setErrors] = useState<Error[]>([]);
 
   const resetForm = () => {
@@ -73,7 +97,13 @@ export default function CreateItem({
     setStatus("registered");
     setLostAt("");
     setLostDate("");
-    setExpirationDate("");
+    setExpirationDate(
+      new Date(
+        new Date().getFullYear() + 3,
+        new Date().getMonth() + 1,
+        new Date().getDate()
+      )
+    );
     setOwners([state.currentUser?.id ?? ""]);
     setOwnerEmails([]);
     setInputOwnerEmail("");
@@ -91,6 +121,7 @@ export default function CreateItem({
     setStatus(initialItem.status);
     setLostAt(initialItem.lostAt ?? "");
     setLostDate(initialItem.lostDate ?? "");
+    setExpirationDate(initialItem.expirationDate);
     setOwners(initialItem.owners);
     setInputOwnerEmail("");
     setVisibleFor(initialItem.visibleFor);
@@ -531,6 +562,7 @@ export default function CreateItem({
                 </FormControl>
               </>
             )}
+
             <FormControl
               isRequired
               isInvalid={getErrorsByType("expirationDate").length > 0}
@@ -545,18 +577,24 @@ export default function CreateItem({
               >
                 Varighet
               </FormControl.Label>
-              <Input
-                type="text"
-                value={expirationDate}
-                placeholder="20.12.2021"
-                onChangeText={(text: string) => setExpirationDate(text)}
-              />
+              <Button onPress={showDatepicker} mb={5}>
+                Sett utløpsdato!
+              </Button>
+              {show && (
+                <DateTimePicker
+                  testID="datetimepicker"
+                  value={expirationDate}
+                  display="default"
+                  onChange={onChange}
+                />
+              )}
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
               >
                 {getErrorsByType("expirationDate").map((e) => e.message)}
               </FormControl.ErrorMessage>
             </FormControl>
+
             <FormControl isInvalid={getErrorsByType("email").length > 0}>
               <FormControl.Label
                 _text={{

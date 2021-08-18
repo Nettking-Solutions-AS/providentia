@@ -95,7 +95,7 @@ export const validateCreateItem = (
   bounty: number,
   lostAt: string | undefined,
   lostDate: string | undefined,
-  expirationDate: string,
+  expirationDate: any,
   owners: string[],
   status: Status
 ): Error[] => {
@@ -160,11 +160,6 @@ export const validateCreateItem = (
     validationErrorsAddItem.push({
       type: "expirationDate",
       message: "Du må skrive inn en utløpsdato!",
-    });
-  } else if (!validDate(expirationDate)) {
-    validationErrorsAddItem.push({
-      type: "expirationDate",
-      message: "Ugyldig dato!",
     });
   }
   return validationErrorsAddItem;

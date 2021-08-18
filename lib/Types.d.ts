@@ -19,6 +19,8 @@ export type InsuranceCompany =
   | "Storebrand"
   | "Annet";
 
+export type ExpirationDate = "1" | "2" | "3";
+
 export type ID = string;
 
 export type User = {
@@ -40,7 +42,7 @@ export type Item = {
   status: Status;
   lostAt?: string;
   lostDate?: string;
-  expirationDate: string;
+  expirationDate: any;
   owners: ID[];
   visibleFor: ID[];
 };
