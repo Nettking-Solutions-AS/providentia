@@ -84,9 +84,6 @@ export const validateInsuranceCompany = (
   return validationErrors;
 };
 
-const validDate = (da: string) =>
-  /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/.test(da);
-
 export const validateCreateItem = (
   id: string,
   name: string,
