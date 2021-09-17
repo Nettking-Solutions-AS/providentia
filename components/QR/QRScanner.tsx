@@ -6,6 +6,7 @@ import { Item } from "../../lib/Types";
 
 const styles = StyleSheet.create({
   container: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
