@@ -90,7 +90,7 @@ export default function ItemCard({
       mb={5}
     >
       <HStack alignItems="center" justifyContent="space-between">
-        <Heading size="md">
+        <Heading size="md" mt={2} mb={2}>
           {item.name} ({owners?.join(", ")})
         </Heading>
         <IconButton
@@ -104,7 +104,7 @@ export default function ItemCard({
         }}
         alt="Denne gjenstanden har ingen bilder"
         resizeMode="contain"
-        height={150}
+        height={300}
         roundedTop="md"
       />
       <Text color="primary.150" mt={5} mb={5}>
