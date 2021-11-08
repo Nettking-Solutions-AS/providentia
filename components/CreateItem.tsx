@@ -19,7 +19,6 @@ import { Platform, Image, SafeAreaView, StyleSheet } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuidv4 } from "uuid";
 import { AntDesign } from "@expo/vector-icons";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import { Error, Item, Status } from "../lib/Types";
 import { useGlobalState } from "./StateManagement/GlobalState";
 import { validateCreateItem, validateEmail } from "../lib/validation";
@@ -68,40 +67,6 @@ export default function CreateItem({
   );
   const [inputVisibleFor, setInputVisbleFor] = useState("");
 
-  const [, setMode] = useState("date");
-  const [showExpirationPicker, setShowExpirationPicker] = useState(false);
-  const [showLostPicker, setShowLostPicker] = useState(false);
-
-  const onChangeExpiration = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate || expirationDate;
-    setShowExpirationPicker(Platform.OS === "ios");
-    setExpirationDate(currentDate);
-  };
-
-  const onChangeLostDate = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate || lostDate;
-    setShowLostPicker(Platform.OS === "ios");
-    setLostDate(currentDate);
-  };
-
-  const showModeExpiration = (currentMode: React.SetStateAction<string>) => {
-    setShowExpirationPicker(true);
-    setMode(currentMode);
-  };
-
-  const showModeLostDate = (currentMode: React.SetStateAction<string>) => {
-    setShowLostPicker(true);
-    setMode(currentMode);
-  };
-
-  const showExpiration = () => {
-    showModeExpiration("date");
-  };
-
-  const showLostDate = () => {
-    showModeLostDate("date");
-  };
-
   const [errors, setErrors] = useState<Error[]>([]);
 
   const resetForm = () => {
@@ -113,18 +78,22 @@ export default function CreateItem({
     setStatus("registered");
     setLostAt("");
     setLostDate(
-      new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() + 1,
-        new Date().getDate()
-      )
+      new Date().toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
     );
     setExpirationDate(
       new Date(
         new Date().getFullYear() + 3,
-        new Date().getMonth() + 1,
+        new Date().getMonth(),
         new Date().getDate()
-      )
+      ).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
     );
     setOwners([state.currentUser?.id ?? ""]);
     setOwnerEmails([]);
@@ -556,6 +525,7 @@ export default function CreateItem({
                     {getErrorsByType("lostAt").map((e) => e.message)}
                   </FormControl.ErrorMessage>
                 </FormControl>
+
                 <FormControl
                   isRequired
                   isInvalid={getErrorsByType("lostDate").length > 0}
@@ -570,17 +540,12 @@ export default function CreateItem({
                   >
                     Når ble gjenstanden mistet?
                   </FormControl.Label>
-                  <Button onPress={showLostDate} mb={5}>
-                    Sett mistet dato!
-                  </Button>
-                  {showLostPicker && (
-                    <DateTimePicker
-                      testID="datetimepicker"
-                      value={lostDate}
-                      display="default"
-                      onChange={onChangeLostDate}
-                    />
-                  )}
+                  <Input
+                    type="text"
+                    value={lostDate}
+                    placeholder="23.12.2021"
+                    onChangeText={(text: string) => setLostDate(text)}
+                  />
                   <FormControl.ErrorMessage
                     _text={{ color: "primary.250", fontSize: "md" }}
                   >
@@ -602,19 +567,14 @@ export default function CreateItem({
                   fontWeight: 500,
                 }}
               >
-                Varighet
+                Utløpsdato
               </FormControl.Label>
-              <Button onPress={showExpiration} mb={5}>
-                Sett utløpsdato!
-              </Button>
-              {showExpirationPicker && (
-                <DateTimePicker
-                  testID="datetimepicker"
-                  value={expirationDate}
-                  display="default"
-                  onChange={onChangeExpiration}
-                />
-              )}
+              <Input
+                type="text"
+                value={expirationDate}
+                placeholder="23.12.2021"
+                onChangeText={(text: string) => setExpirationDate(text)}
+              />
               <FormControl.ErrorMessage
                 _text={{ color: "primary.250", fontSize: "md" }}
               >

@@ -49,20 +49,25 @@ export default function ItemOverview({
   const styles = StyleSheet.create({
     container: {
       flex: 1,
+      flexDirection: "column",
+      justifyContent: "center",
+      width: "100%",
     },
   });
 
   return (
     <SafeAreaView style={styles.container}>
       {scannerOpen && <QRScanner createItem={false} setItem={setItem} />}
-      {!scannerOpen && !scannedItem && isAdmin(state.currentUser) && (
-        <ScrollView flex={1} p={2} overflow="scroll">
-          <VStack space={2} alignItems="center">
+      <ScrollView flex={1} p={2} overflow="scroll">
+        <VStack space={2} alignItems="center">
+          {!scannerOpen && (
             <Heading mb={5} size="2xl">
               {isAdmin(state.currentUser)
                 ? "Alle gjenstander"
                 : "Mine gjenstander"}
             </Heading>
+          )}
+          {!scannerOpen && !scannedItem && isAdmin(state.currentUser) && (
             <>
               <Heading size="lg">Finn gjenstand</Heading>
               <HStack mt={2} mb={5}>
@@ -71,21 +76,21 @@ export default function ItemOverview({
                 </Button>
               </HStack>
             </>
-            {scannedItem && (
-              <Button onPress={() => setScannedItem(undefined)}>
-                Fjern filter
-              </Button>
-            )}
-            {!scannerOpen && getItemList()}
-            {!scannerOpen && !isAdmin(state.currentUser) && (
-              <IconButton
-                onPress={() => navigation.navigate("Ny gjenstand")}
-                icon={<Icon size="md" as={<AntDesign name="plus" />} />}
-              />
-            )}
-          </VStack>
-        </ScrollView>
-      )}
+          )}
+          {scannedItem && (
+            <Button onPress={() => setScannedItem(undefined)}>
+              Fjern filter
+            </Button>
+          )}
+          {!scannerOpen && getItemList()}
+          {!scannerOpen && !isAdmin(state.currentUser) && (
+            <IconButton
+              onPress={() => navigation.navigate("Ny gjenstand")}
+              icon={<Icon size="md" as={<AntDesign name="plus" />} />}
+            />
+          )}
+        </VStack>
+      </ScrollView>
     </SafeAreaView>
   );
 }
