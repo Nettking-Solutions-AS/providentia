@@ -90,10 +90,11 @@ export default function ItemCard({
       mb={5}
     >
       <HStack alignItems="center" justifyContent="space-between">
-        <Heading size="md" mt={2} mb={2}>
+        <Heading size="md" mt={2} mb={2} mr={5}>
           {item.name} ({owners?.join(", ")})
         </Heading>
         <IconButton
+          marginLeft="auto"
           icon={<Icon size="sm" as={<AntDesign name="edit" />} />}
           onPress={() => editItem(item)}
         />
